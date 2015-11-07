@@ -1,9 +1,6 @@
-var express = require('express');
-var app = express();
+var app = require('./base/expressApp').app;
 
-app.get('/api', function (req, res) {
-    res.send('API is running');
-});
+require('./base/routes').setUpRotes(app);
 
 var server = app.listen(8081, function () {
 
