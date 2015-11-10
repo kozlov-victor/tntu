@@ -1,1 +1,64 @@
-main
+
+<form class="frmWithMarginTop centerHorizontal block wide relative withMaxWidth">
+
+    <div class="table frmTable width100">
+        <div class="tableRow underlined relative">
+            <div class="tableCell overWidth">
+                <input type="text" style="display: none;"/>
+                <input
+                        data-clearable="true"
+                        data-autosave="true"
+                        id="email" type="email"
+                        data-msg-placeholder="email"
+                        class="vAligned mid"
+                        name="email"
+                        autocomplete="off"
+                        />
+                <div class="validationErrorWrapper noDisplay" data-validation-for="email">
+                    <div class="validationBubbleHandler absolute right0 withMarginRight"></div>
+                    <div class="absolute right0 validationErrorContainer small"></div>
+                </div>
+            </div>
+            <div class="tableCell rightAligned">
+                <img src="css/images/close/close.png" width="24" class="active vAligned noDisplay"
+                     data-clear="email"/>
+            </div>
+        </div>
+        <div class="tableRow underlined">
+            <div class="tableCell relative" >
+                <input type="password" style="display: none;"/>
+                <input data-clearable="true"
+                       id="pass" type="password"
+                       data-autosave="true"
+                       data-msg-placeholder="pass"
+                       class="vAligned mid"
+                       name="pass"
+                       autocomplete="off"
+                        >
+                <div class="validationErrorWrapper noDisplay" data-validation-for="pass">
+                    <div class="validationBubbleHandler absolute right0 withMarginRight"></div>
+                    <div class="absolute right0 validationErrorContainer small"></div>
+                </div>
+            </div>
+            <div class="tableCell rightAligned">
+                <img src="css/images/close/close.png" width="24" class="active vAligned noDisplay"
+                     data-clear="pass"/>
+            </div>
+        </div>
+    </div>
+    <button id="btnLogin" class="width100 frmBtn mid">
+        <span data-msg="enter"></span>
+    </button>
+    <div>
+        <a href="#kw_pageId=remindPassword"
+           class="block asButton asGreyButton withMarginTopXX withPaddings mid"
+           data-msg="forgotPass">
+        </a>
+    </div>
+    <a href="#kw_pageId=registration" class="block asButton asGreenButton withPaddings withMarginTopXX mid">
+        <span data-msg="registration"></span>
+    </a>
+
+
+
+</form>

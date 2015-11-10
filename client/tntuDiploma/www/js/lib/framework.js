@@ -14,7 +14,7 @@
         if (!o) return '';
         var paramsArr = [];
         for (var key in o) {
-            paramsArr.push([key,o[key]]);
+            paramsArr.push([key,encodeURIComponent(o[key])]);
         }
         return paramsArr.map(function(item){return [item[0]+'='+item[1]]}).join('&');
     };
@@ -23,11 +23,8 @@
         var Request = function(data) {
             data.method = data.method || 'get';
             var postBody = Utils.objectToQuery(data.data);
-            if (data.data) {
-                var pairs = [];
-                for (var key in data.data) {
-                    pairs.push(key+'=');
-                }
+            if (data.method=='get' && postBody) {
+                data.url+='?'+postBody;
             }
             var xhr=new XMLHttpRequest();
             console.log('invoked ajax with url',data.url);

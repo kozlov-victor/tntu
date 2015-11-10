@@ -1,7 +1,10 @@
 
 (function(){
 
-    var Utils = window.Utils;
+
+    var BASE_URL = 'http://0.0.0.0:8081/';
+    var AUTH_URL = BASE_URL + 'auth';
+
 
     var Api = {};
 
@@ -32,6 +35,21 @@
         } catch(e){
             localStorage.removeItem('credentials');
         }
+    };
+
+    Api.authorize = function(login,pass){
+        return new Promise(function(resolve,reject){
+            Utils.Ajax.send({
+                url:AUTH_URL,
+                data: {
+                    login:login,
+                    pass:pass
+                },
+                success:function(data){
+                    resolve(data);
+                }
+            });
+        });
     };
 
     Api.makeBaseRequest = function() {
