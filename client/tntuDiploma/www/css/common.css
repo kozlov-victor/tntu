@@ -1,0 +1,221 @@
+/*-----common------*/
+
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background:#fff fixed;
+    font-family: Helvetica, Arial, sans-serif;
+    height:100%;
+    margin:0;
+    padding:0;
+    width:100%;
+}
+
+body {
+
+}
+
+
+h1 {
+    font-weight:normal;
+    margin:0;
+    overflow:visible;
+    padding:0;
+    text-align:center;
+}
+
+/*----general rules-------*/
+
+.opacityTransition {
+    transition: opacity 0.5s ease;
+}
+
+.inlineBlock {
+    display: inline-block;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.clear {
+    clear:both;
+}
+
+.left0 {
+    left:0;
+}
+
+.right0 {
+    right: 0;
+}
+
+.floatRight {
+    float: right;
+}
+
+.vAligned {
+    vertical-align: middle;
+}
+
+.textPreformated {
+    white-space: pre-line;
+}
+
+.rightAligned {
+    text-align: right;
+}
+
+.fontSize0 {
+    font-size: 0;
+}
+
+.centerAligned {
+    text-align: center;
+}
+
+.withPaddings {
+    padding: 10px 5px;
+}
+
+.withMargins {
+    margin: 10px 5px;
+}
+
+.withMarginRight {
+    margin-right: 10px;
+}
+
+.withMarginLeft {
+    margin-left: 10px;
+}
+
+.withMarginBottom {
+    margin-bottom: 10px;
+}
+
+.withMarginTop {
+    margin-top: 10px;
+}
+
+.withMarginTopXX {
+    margin-top: 30px;
+}
+
+.withBorderTop {
+    border-top: 1px solid #fafafa;
+}
+
+.withBorderBottom {
+    border-bottom: 1px solid #fafafa;
+}
+
+.block {
+    display: block;
+}
+
+.centerHorizontal {
+    margin: 0 auto;
+}
+
+.table {display: table;}
+
+.height100 {
+    height: 100%;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.width80 {
+    width: 90%;
+}
+
+.width90 {
+    width: 90%;
+}
+
+.bgGrey {
+    background-color: #fafafa;
+}
+
+.bgDarkGrey {
+    background-color: #eee;
+}
+
+.tableCell {
+    display: table-cell;
+}
+
+.tableRow {
+    display: table-row;
+}
+
+.noDisplay {
+    display: none;
+}
+
+
+.wide {
+    width: 80%;
+}
+
+.white {
+    color:white;
+}
+
+.blue {
+    color: #1e88b5;
+}
+
+.green {
+    color:#66bb6a;
+}
+
+.grey {
+    color: #b0b0b0;
+}
+
+.red {
+    color:red;
+}
+
+.frmWithMarginTop {
+    margin-top: 130px;
+}
+
+.overWidth {
+    width: 110%;
+}
+
+.mid {
+    font-size: 13px;
+}
+
+.midPlus {
+    font-size: 14px;
+}
+
+.small {
+    font-size: 10px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+
+
+
+

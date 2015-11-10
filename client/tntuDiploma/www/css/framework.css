@@ -1,0 +1,328 @@
+/*---common layout-----*/
+html,
+body,div {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+header {
+    background-color: #fafafa;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+body {
+    overflow: auto;
+    position: relative;
+    z-index:1;
+    line-height: 12px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index:10;
+    background-color: #fafafa;
+}
+
+.fixfixed .iosFixPos {
+    position: absolute !important;
+}
+
+#subHeader,#subFooter {
+    padding: 0 0;
+    position:fixed;
+    z-index: 8;
+    background-color: white;
+}
+
+#subHeader {
+    left:0;
+    right:0;
+    height: 35px;
+}
+
+#subFooter {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 50px;
+}
+
+.inputWrapper {
+    border: none;
+    border-bottom: 1px solid grey;
+}
+
+@media screen and (min-width: 740px) {
+
+    body {
+        line-height: 20px;
+    }
+
+    .mid {
+        font-size: 20px;
+    }
+
+    .midPlus {
+        font-size: 21px;
+    }
+
+    .small {
+        font-size: 12px;
+    }
+}
+
+/*---framework specific----*/
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.autocompleteListWrapper {
+    background-color: white;
+    z-index: 20000;
+    position: relative;
+}
+
+.autocompleteList {
+    box-shadow: 0 2px 3px rgba(0,0,0,0.8);
+    width: 80%;
+    margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 15px;
+}
+
+
+.autocompleteItem {
+    margin: 20px 8px;
+}
+
+.commonListContainer {
+    position: relative;
+}
+
+.commonListHeader {
+
+}
+
+.commonList {
+    position: relative;
+    z-index: 5;
+    margin-top:43px;
+}
+
+.commonLine {
+    padding: 15px;
+}
+
+.firstListItemCellChild {
+    padding-left: 15px;
+}
+
+.lastListItemCellChild {
+    padding-right: 15px;
+}
+
+
+.commonListItem {
+    outline: 1px solid #F7F7F7;
+}
+
+.commonListItem:active {
+    background-color: #fafafa;
+}
+
+.inputWrapper.active {
+    border-bottom: 1px solid green;
+}
+
+.withMaxWidth {
+    max-width: 500px;
+}
+
+.frmTable {
+    border-collapse: collapse;
+}
+
+.frmTable .tableRow {
+    padding: 5px;
+}
+
+.underlined {
+    border-bottom: 1px solid #bdbdbd;
+}
+
+.underlined.active {
+    border-bottom: 1px solid green;
+}
+
+.underlined.error {
+    border-bottom: 1px solid red;
+}
+
+.frmBtn {
+    margin-top: 30px;
+    padding: 10px;
+}
+
+.dialog {
+    display: none;
+    position: absolute;
+    z-index:200;
+    top: 100px;
+    width: 100%;
+}
+
+.withTransitionAll {
+    -webkit-transition: all 0.3s ease;
+}
+
+.dialogContent {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dialogContent button {
+    background-color: white;
+    color: #e65100;
+}
+
+.dialogContent button:active {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.searchIconGreyWrapper {
+    margin-right: 5px;
+}
+
+.iconWrapper .iconCommon {
+    display: inline-block;
+}
+
+.iconWrapper .iconActive {
+    display: none;
+}
+
+.iconWrapper:active .iconCommon{
+    display: none;
+}
+
+.iconWrapper:active .iconActive{
+    display: inline-block;
+}
+
+/*-----buttons-------*/
+
+a.commonLink,a.commonLink:active,a.commonLink:visited {
+    color: #1a88e5;
+}
+
+button {
+    outline: none;
+    font-weight: bold;
+}
+
+a,a:active,a:visited {
+    text-decoration: none;
+}
+
+button,.asButton {
+    background-color: #f57c00;
+    border: none;
+    color:white;
+}
+
+.asButton {
+    text-align: center;
+}
+
+a.asButton:visited {
+    color:white;
+}
+
+button {
+    font-weight: bold;
+}
+
+button:active,.asButton:active {
+    background-color: #e65100;
+}
+
+button.asGreenButton,.asButton.asGreenButton {
+    border: 1px solid #66bb6a;
+    color:#66bb6a;
+    background-color: white;
+}
+
+a.asButton.asGreenButton:visited {
+    color:#66bb6a;
+}
+
+button.asGreenButton:active,.asButton.asGreenButton:active {
+    background-color: #66bb6a;
+    color:white !important;
+}
+
+.asButton.asGreyButton {
+    background-color: white;
+    color: #1a88e5;
+}
+
+a.asButton.asGreyButton:visited {
+    color: #1a88e5;
+}
+
+.asButton.asGreyButton:active {
+    background-color: #fafafa;
+}
+
+button, input[type=text],input[type=password],input[type=email] {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+input[type=text],input[type=password],input[type=email] {
+    background: none;
+    border: none;
+    outline: none;
+    width: 100%;
+    margin: 8px 0;
+}
+
+.validationBubbleHandler {
+    border-top: none;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid red;
+    top: 20px;
+}
+
+.validationErrorWrapper {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+}
+
+.validationErrorContainer {
+    color:red;
+    padding:5px;
+    background-color: white;
+    border: 1px solid red;
+    top: 30px;
+    min-width: 200px;
+    text-align: right;
+}
