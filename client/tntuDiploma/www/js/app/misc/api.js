@@ -1,9 +1,11 @@
+'use strict';
 
 (function(){
 
 
-    var BASE_URL = 'http://0.0.0.0:8081/';
+    var BASE_URL = 'http://0.0.0.0:8082/';
     var AUTH_URL = BASE_URL + 'auth';
+    var REGISTRATION_URL = BASE_URL + 'register';
 
 
     var Api = {};
@@ -44,6 +46,22 @@
                 data: {
                     login:login,
                     pass:pass
+                },
+                success:function(data){
+                    resolve(data);
+                }
+            });
+        });
+    };
+
+    Api.register = function(name,email,password){
+        return new Promise(function(resolve,reject){
+            Utils.Ajax.send({
+                url:REGISTRATION_URL,
+                data:{
+                    mail:encodeURIComponent(email),
+                    name:encodeURIComponent(name),
+                    password:encodeURIComponent(password)
                 },
                 success:function(data){
                     resolve(data);
