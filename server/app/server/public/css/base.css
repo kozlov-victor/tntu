@@ -18,6 +18,11 @@ table.centered button{
     display: block;
 }
 
+table.centered a{
+    display: block;
+    text-align: center;
+}
+
 .red {
     color:red;
 }
