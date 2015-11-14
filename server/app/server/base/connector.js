@@ -16,7 +16,6 @@ var dbConnect = function(connection) {
             if(err){
                 throw err;
             }
-            console.log('Connection established');
             resolve();
         });
     });
@@ -24,6 +23,7 @@ var dbConnect = function(connection) {
 
 var dbQuery = function(connection,queryStr,params) {
     return new Promise(function(resolve,reject){
+        console.log('query:',queryStr,params);
         connection.query(queryStr,params,function(err,rows){
             if(err) throw err;
             resolve(rows);
@@ -45,6 +45,8 @@ var executeQuery = function(query,params) {
                 return dbQuery(con,query,params);
             }).
             then(function(rows){
+                rows=rows||[];
+                console.log('accepted rows',rows);
                 dbClose(con);
                 resolve(rows);
             });

@@ -1,0 +1,47 @@
+<%include includes/header.html%>
+
+
+<h1><%=i18n.enter%></h1>
+<form id="authForm">
+    <table class="centered">
+        <tr>
+            <td>
+                <span class="red" id="message"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input name="email" id="email" type="email" placeholder="<%=i18n.email%>"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input name="password" id="pass" type="password" placeholder="<%=i18n.pass%>"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="enter">
+                    <%=i18n.enter%>
+                </button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script type="text/javascript">
+
+$(function(){
+
+    $(document).on('click','#enter',function(e){
+        e.preventDefault();
+        $.get('/auth',$('#authForm').serialize(),function(data){
+            console.log(data);
+        });
+    });
+
+});
+
+</script>
+
+<%include includes/footer.html%>

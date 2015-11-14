@@ -1,0 +1,27 @@
+
+h1 {
+    text-align: center;
+}
+
+table.centered {
+    width: 300px;
+    margin: 0 auto;
+}
+
+table.centered input {
+    width: 100%;
+}
+
+table.centered button{
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+.red {
+    color:red;
+}
+
+.noDisplay {
+    display: none;
+}

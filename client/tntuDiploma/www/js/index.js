@@ -15,7 +15,7 @@ window.onerror = function(message, url, lineNumber) {
                 'js/app/misc/api.js',
                 'js/app/misc/i18n.js',
                 'js/app/misc/validator.js',
-                'js/app/controllers/mainPageController.js',
+                'js/app/controllers/loginPageController.js',
                 'js/app/controllers/registrationController.js',
             ]).
             then(function(){
@@ -23,7 +23,7 @@ window.onerror = function(message, url, lineNumber) {
                 i18n.setLocale('ua');
                 i18n.applyLocale();
 
-                MainPageController.init();
+                LoginPageController.init();
                 RegistrationController.init();
 
                 CommonController.showPage(INITIAL_PAGE);

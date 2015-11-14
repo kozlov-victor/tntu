@@ -2,13 +2,13 @@
 
 (function(){
 
-    var MainPageController = {};
+    var LoginPageController = {};
 
 
 
 
-    MainPageController.init = function() {
-        CommonController.registerControllerForPage(MainPageController,'main');
+    LoginPageController.init = function() {
+        CommonController.registerControllerForPage(LoginPageController,'login');
 
         Utils.onClick('btnLogin',function(){
             var emailInput = Utils.byId('email');
@@ -42,11 +42,11 @@
 
     };
 
-    MainPageController.onPageShowed = function(options){
+    LoginPageController.onPageShowed = function(options){
 
     };
 
 
-    window.MainPageController = MainPageController;
+    window.LoginPageController = LoginPageController;
 
 })();
