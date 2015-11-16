@@ -6,6 +6,7 @@ const CREATE_USER = 'insert into user (name,mail,password,hash) values (?,?,?,?)
 const GET_EMAIL = 'select id from user where LOWER(mail)=LOWER(?) limit 1';
 const GET_USER_BY_TOKEN = 'select * from user where hash=? limit 1';
 const GET_ALL_USERS = 'select * from user;';
+const GET_USER_BY_MAIL_AND_PASSWORD = 'select * from user where mail=? and password=?';
 
 var hashCode = function(s) {
     var hash = 0, i, chr, len;
@@ -47,6 +48,18 @@ module.exports.getUserByToken = function(token) {
             });
     });
 };
+
+module.exports.getUserByMailAndPassword = function(mail,password) {
+   return new Promise(function(resolve){
+       connector.
+           executeQuery(GET_USER_BY_MAIL_AND_PASSWORD,[mail,password]).
+           then(function(rows){
+               var user = (rows && rows[0]);
+               resolve(user);
+           });
+   });
+};
+
 
 module.exports.getAllUsers = function(){
     return new Promise(function(resolve){

@@ -1,0 +1,32 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.departments%></h1>
+
+<table>
+    <tr>
+        <th>
+            <%=i18n.number%>
+        </th>
+        <th>
+            <%=i18n.departmentName%>
+        </th>
+        <th>
+            <%=i18n.actions%>
+        </th>
+    </tr>
+    <%departments.forEach(function(d){%>
+        <tr data-id="<%=d.id%>">
+            <td>
+                <%=d.id%>
+            </td>
+            <td>
+                <textarea><%=d.name%></textarea>
+            </td>
+            <td>
+                <button><%=i18n.save%></button>
+            </td>
+        </tr>
+    <%});%>
+</table>
+
+<%include includes/footer.html%>

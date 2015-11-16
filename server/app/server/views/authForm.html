@@ -40,8 +40,16 @@ $(function(){
 
     $(document).on('click','#enter',function(e){
         e.preventDefault();
+        if (!($('#pass').val() && $('#email').val())) {
+            $('#message').html('<%=i18n.notAllFields%>');
+            return;
+        }
         $.get('/auth',$('#authForm').serialize(),function(data){
-            console.log(data);
+            if (!data.success) {
+                $('#message').html(data.message);
+            } else {
+                location.href='/admin';
+            }
         });
     });
 

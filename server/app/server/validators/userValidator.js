@@ -7,5 +7,5 @@ module.exports.validateCredentials = function(name,mail,password){
 };
 
 module.exports.canWorksAsAdmin = function(user){
-    return user.active==1 && user.role=='admin';
+    return user.active==1 && user.roleId==1;
 };

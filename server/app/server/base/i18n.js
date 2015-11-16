@@ -7,23 +7,41 @@ _i18n.bundle = {
     'ua': {
         emailExists:'Даний email вже зареєстровано в системі',
         userCreated:'Реєстрація пройшла успішно',
-        userActivation:'Активація користувачів',
         accessDenied:'Недостатньо прав для перегляду цієї сторінки',
+        notAllFields:'Не всі поля заповнено',
         email:'E-mail',
         pass:'Пароль',
         name:'Им\'я',
         enter:'Увійти',
+        save:'Зберігти',
         forgotPass:'Забули пароль',
         registration:'Реєстрація',
         fieldIsEmpty:'Не заповнено поле {field}',
         fieldIsNotEmail:'Не корректний e-mail',
         enterFieldInRange:'Введіть від {min} до {max} символів',
-        sendPassword:'Отправить пароль',
         toMain:'На головну',
         register:'Зареєструватися',
         alreadyRegistered:'Вже зареєструвались?',
         incorrectSymbols:'Поле містить некоректні символи',
-        IAgreeWith:'Я погоджуюсь із політикою конфіденційності цього програмного забезпечення'
+        IAgreeWith:'Я погоджуюсь із політикою конфіденційності цього програмного забезпечення',
+        incorrectCredentials:'Користувача з такими даними не зареєстровано в системі',
+        userActivation:'Управління користувачами в системі',
+
+        'undefined':'Не визначено',
+        doctor:'Лікар',
+        doctorAssys:'Фельшер',
+        driver:'Водій',
+        paramedic:'Санітар',
+        admin:'Адміністратор',
+
+        number:'Номер',
+        user:'Користувач',
+        role:'Роль',
+        isActive:'Активність',
+        department:'Відділ',
+        actions:'Дії',
+        departments:'Управління відділами підприємства',
+        departmentName:'Назва відділу'
     }
 };
 

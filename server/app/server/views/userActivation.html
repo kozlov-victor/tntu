@@ -1,8 +1,27 @@
 <%include includes/header.html%>
 
-
-<h1>User activation</h1>
+<h1><%=i18n.userActivation%></h1>
 <table>
+    <tr>
+        <th>
+            <%=i18n.number%>
+        </th>
+        <th>
+            <%=i18n.user%>
+        </th>
+        <th>
+            <%=i18n.role%>
+        </th>
+        <th>
+            <%=i18n.isActive%>
+        </th>
+        <th>
+            <%=i18n.department%>
+        </th>
+        <th>
+            <%=i18n.actions%>
+        </th>
+    </tr>
     <%for (var index in users) {%>
     <%var user=users[index];%>
     <tr data-id="<%=user.id%>">
@@ -13,17 +32,23 @@
            <%=user.name%>
        </td>
        <td>
-           <input type="checkbox"/>
+           <%var isChecked=user.active==1?'checked':'';%>
+           <input type="checkbox" <%=isChecked%>/>
        </td>
        <td>
            <select>
-               <option value="admin">admin</option>
-               <option value="doctor">doctor</option>
-               <option value="doctorAssistant">doctorAssistant</option>
+               <%for (var roleIndex in allUserRoles) {%>
+               <%var userRole = allUserRoles[roleIndex];%>
+               <%var roleSelected=userRole.id==user.roleId?'selected="selected"':'';%>
+               <option <%=roleSelected%> value="<%=userRole.id%>"><%=userRole.desc%></option>
+               <%}%>
            </select>
        </td>
+        <td>
+
+        </td>
        <td>
-           <button>save</button>
+           <button><%=i18n.save%></button>
        </td>
     </tr>
     <%}%>
