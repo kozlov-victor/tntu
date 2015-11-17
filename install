@@ -1,0 +1,6 @@
+npm install mysql
+npm install promise
+npm install html
+npm install ejs
+npm install cookie-parser
+npm install express-session
