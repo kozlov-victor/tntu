@@ -1,0 +1,63 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.addCar%></h1>
+<div id="result" class="centerAligned"></div>
+
+
+<div>
+    <form id="addCarForm">
+        <table class="centered">
+            <tr>
+                <td>
+                    <%=i18n.number%>
+                </td>
+                <td>
+                    <input class="width100" type="text" name="number"/>
+                </td>
+            </tr>
+            <tr>
+               <td>
+                   <%=i18n.carModel%>
+               </td>
+               <td>
+                   <input class="width100" type="text" name="model"/>
+               </td>
+            </tr>
+            <tr>
+                <td>
+                    <%=i18n.carDescription%>
+                </td>
+                <td>
+                    <textarea class="width100" name="description"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button class="width100" id="addCar">
+                        <%=i18n.addCar%>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<a href="/cars"><%=i18n.carsManagement%></a>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $(document).on('click','#addCar',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            $.get('/addCar',$('#addCarForm').serialize(),function(data){
+                $('#result').html(data.message);
+            });
+        });
+
+    });
+
+</script>
+
+<%include includes/footer.html%>

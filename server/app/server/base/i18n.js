@@ -44,7 +44,12 @@ _i18n.bundle = {
         actions:'Дії',
         departments:'Управління відділами підприємства',
         departmentName:'Назва відділу',
-        addDepartment:'Створити відділ'
+        addDepartment:'Створити відділ',
+        carsManagement:'Управління транспортними ресурсами',
+        addCar:'Додати',
+        carNumber:'Номер автомобіля',
+        carModel:'Модель автомобіля',
+        carDescription:'Додатково'
     }
 };
 

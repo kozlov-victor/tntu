@@ -17,4 +17,5 @@ module.exports.setUpRotes = function(app){
     setup(app);
     require('../rotes/userRote').init(app);
     require('../rotes/departmentRote').init(app);
+    require('../rotes/carRote').init(app);
 };

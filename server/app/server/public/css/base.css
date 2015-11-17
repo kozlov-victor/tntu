@@ -30,3 +30,11 @@ table.centered a{
 .noDisplay {
     display: none;
 }
+
+.width100 {
+    width: 100%;
+}
+
+.centerAligned {
+    text-align: center;
+}

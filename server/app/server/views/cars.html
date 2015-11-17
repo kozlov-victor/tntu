@@ -1,0 +1,70 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.carsManagement%></h1>
+<div id="result" class=""></div>
+<table>
+    <tr>
+        <th>
+            <%=i18n.number%>
+        </th>
+        <th>
+            <%=i18n.carNumber%>
+        </th>
+        <th>
+            <%=i18n.carModel%>
+        </th>
+        <th>
+            <%=i18n.carDescription%>
+        </th>
+        <th>
+            <%=i18n.actions%>
+        </th>
+    </tr>
+    <%cars && cars.forEach(function(car){%>
+        <tr data-id="<%=car.id%>">
+            <td>
+                <%=car.id%>
+            </td>
+            <td>
+                <input data-field="number" type="text" value="<%=car.number%>"/>
+            </td>
+            <td>
+                <input data-field="model" type="text" value="<%=car.model%>"/>
+            </td>
+            <td>
+                <textarea data-field="description"><%=car.description%></textarea>
+            </td>
+            <td>
+                <button data-action="updateCar">
+                    <%=i18n.save%>
+                </button>
+            </td>
+
+        </tr>
+    <%})%>
+</table>
+
+<a href="/addCarForm"><%=i18n.addCar%></a>
+
+<script type="text/javascript">
+
+    $(document).on('click','[data-action=updateCar]',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var row = $(this).closest('tr');
+        var options = {
+            id: row.data('id'),
+            number:row.find('[data-field=number]').val(),
+            model:row.find('[data-field=model]').val(),
+            description:row.find('[data-field=description]').val()
+        };
+        console.log(options);
+        $.get('/updateCar',options,function(data){
+            $('#result').html(data.message);
+        });
+
+    });
+
+</script>
+
+<%include includes/footer.html%>
