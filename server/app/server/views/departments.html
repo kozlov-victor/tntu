@@ -1,7 +1,7 @@
 <%include includes/header.html%>
 
 <h1><%=i18n.departments%></h1>
-
+<div class="centerAligned" id="result"></div>
 <table>
     <tr>
         <th>
@@ -23,10 +23,32 @@
                 <textarea><%=d.name%></textarea>
             </td>
             <td>
-                <button><%=i18n.save%></button>
+                <button data-action="updateDepartment"><%=i18n.save%></button>
             </td>
         </tr>
     <%});%>
 </table>
+
+<a href="/addDepartmentForm">
+    <%=i18n.addDepartment%>
+</a>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $(document).on('click','[data-action=updateDepartment]',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var id = $(this).closest('tr').data('id');
+            var name = $(this).closest('tr').find('textarea').val();
+            $.get('/updateDepartment',{departmentId:id,departmentName:name},function(data){
+                $('#result').html(data.message);
+            });
+        })
+
+    });
+
+</script>
 
 <%include includes/footer.html%>

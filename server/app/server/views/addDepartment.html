@@ -1,14 +1,41 @@
 <%include includes/header.html%>
 
-<h1><%=i18n.departments%></h1>
+<h1><%=i18n.addDepartment%></h1>
+<div class="centerAligned" id="result"></div>
+<form id="addDepartmentForm">
+    <table>
+        <tr>
+            <th>
+                <%=i18n.departmentName%>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <textarea name="departmentName"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button id="save">
+                    <%=i18n.save%>
+                </button>
+            </td>
+        </tr>
+    </table>
+</form>
 
-<table>
-    <tr>
-        <th>
+<a href="/departments"><%=i18n.departments%></a>
 
-        </th>
-    </tr>
-
-</table>
+<script type="text/javascript">
+    $(function(){
+        $(document).on('click','#save',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            $.get('/addDepartment', $('#addDepartmentForm').serialize(),function(data){
+                $('#result').html(data.message);
+            });
+        });
+    });
+</script>
 
 <%include includes/footer.html%>

@@ -1,6 +1,7 @@
 <%include includes/header.html%>
 
 <h1><%=i18n.userActivation%></h1>
+<div id="result" class="centerAligned"></div>
 <table>
     <tr>
         <th>
@@ -29,14 +30,14 @@
            <%=user.id%>
        </td>
        <td>
-           <%=user.name%>
+           <input data-field="name" type="text" value="<%=user.name%>"/>
        </td>
        <td>
            <%var isChecked=user.active==1?'checked':'';%>
-           <input type="checkbox" <%=isChecked%>/>
+           <input data-field="active" type="checkbox" <%=isChecked%>/>
        </td>
        <td>
-           <select>
+           <select data-field="userRoleId">
                <%for (var roleIndex in allUserRoles) {%>
                <%var userRole = allUserRoles[roleIndex];%>
                <%var roleSelected=userRole.id==user.roleId?'selected="selected"':'';%>
@@ -45,15 +46,44 @@
            </select>
        </td>
         <td>
+            <select data-field="departmentId">
+                <%allDepartments.forEach(function(d){%>
+                    <%var selected=d.id==user.departmentId?'selected="selected"':'';%>
+                    <option <%=selected%> value="<%=d.id%>"><%=d.name%></option>
+                <%})%>
+            </select>
 
         </td>
        <td>
-           <button><%=i18n.save%></button>
+           <button data-action="updateUser"><%=i18n.save%></button>
        </td>
     </tr>
     <%}%>
 </table>
 
+<script type="text/javascript">
+
+    $(function(){
+
+        $(document).on('click', '[data-action=updateUser]', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var parentRow = $(this).closest('tr');
+            var options = {
+                id: parentRow.data('id'),
+                name: parentRow.find('[data-field="name"]').val(),
+                active: parentRow.find('[data-field=active]').get(0).checked ? 1 : 0,
+                userRoleId: parentRow.find('[data-field=userRoleId]').val(),
+                departmentId: parentRow.find('[data-field=departmentId]').val()
+            };
+            $.get('/updateUser',options,function(data){
+                $('#result').html(data.message);
+            });
+        })
+
+    });
+
+</script>
 
 
 <%include includes/footer.html%>

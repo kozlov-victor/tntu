@@ -7,6 +7,7 @@ const GET_EMAIL = 'select id from user where LOWER(mail)=LOWER(?) limit 1';
 const GET_USER_BY_TOKEN = 'select * from user where hash=? limit 1';
 const GET_ALL_USERS = 'select * from user;';
 const GET_USER_BY_MAIL_AND_PASSWORD = 'select * from user where mail=? and password=?';
+const UPDATE_USER = 'UPDATE user SET name=?,active=?,roleId=?,departmentId=? WHERE id=?';
 
 var hashCode = function(s) {
     var hash = 0, i, chr, len;
@@ -22,7 +23,7 @@ var hashCode = function(s) {
 
 module.exports.createUser = function(name,mail,password) {
     var token = hashCode(mail+password);
-    return new Promise(function(){
+    return new Promise(function(resolve){
         connector.executeQuery(CREATE_USER,[name,mail,password,token]).
             then(function(){
                 resolve ({
@@ -84,6 +85,16 @@ module.exports.checkEmailForExists = function(email){
                     res = {success:true};
                 }
                 resolve(res);
+            });
+    });
+};
+
+
+module.exports.updateUser = function(id,name,active,userRoleId,departmentId){
+    return new Promise(function(resolve){
+        connector.executeQuery(UPDATE_USER,[name,active,userRoleId,departmentId,id])
+            .then(function(){
+                resolve();
             });
     });
 };

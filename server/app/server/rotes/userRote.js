@@ -2,6 +2,7 @@ var express = require('express');
 var session = require('express-session');
 
 var userController = require('../controllers/userController');
+var departmentController = require('../controllers/departmentController');
 var userRolesController = require('../controllers/userRolesController');
 var userValidator = require('../validators/userValidator');
 var i18n = require('../base/i18n');
@@ -24,11 +25,16 @@ module.exports.init = function(app) {
             });
     });
 
+    app.get('/registerForm',function(req,res){
+        res.render('registerForm',utils.parametrize());
+    });
+
 
     app.get('/userActivation',function(req,res){
         var token = req.session.token;
         console.log('token',token);
         var allUserRoles;
+        var allDepartments;
         userController.
             getUserByToken(token).
             then(function(user){
@@ -41,11 +47,17 @@ module.exports.init = function(app) {
                             allUserRoles = _allUserRoles;
                     }).
                     then(function(){
+                        return departmentController.getAllDepartments()
+                    }).
+                    then(function(departments){
+                        allDepartments = departments;
+                    }).
+                    then(function(){
                          return userController.getAllUsers()
                     }).
                     then(function(users){
                         console.log('allUserRoles',allUserRoles);
-                        res.render('userActivation',utils.parametrize({users:users,allUserRoles:allUserRoles}));
+                        res.render('userActivation',utils.parametrize({users:users,allUserRoles:allUserRoles,allDepartments:allDepartments}));
                     });
                 }
             });
@@ -97,6 +109,37 @@ module.exports.init = function(app) {
                 console.log('error cached',err);
                 res.send(err);
             });
+    });
+
+    app.get('/updateUser',function(req,res){
+        var id = req.query.id,
+            name= req.query.name,
+            active =  req.query.active,
+            userRoleId = req.query.userRoleId,
+            departmentId = req.query.departmentId;
+        var validationRes = userValidator.validateName(name);
+        if (!validationRes.success) {
+            res.send(validationRes);
+            return;
+        }
+        var token = req.session.token;
+        userController.
+            getUserByToken(token).
+            then(function(user){
+                console.log('accepted user by token: ',user);
+                if (!userValidator.canWorksAsAdmin(user)) throw 'access denied';
+            }).
+            then(function(){
+                return userController.updateUser(id,name,active,userRoleId,departmentId);
+            }).
+            then(function(){
+                res.send({success:true,message:i18n.get('success')});
+            }).
+            catch(function(err){
+                console.log('error cached',err);
+                res.send(err);
+            });
+
     });
 
 };

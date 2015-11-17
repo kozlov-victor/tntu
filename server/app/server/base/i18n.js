@@ -9,6 +9,7 @@ _i18n.bundle = {
         userCreated:'Реєстрація пройшла успішно',
         accessDenied:'Недостатньо прав для перегляду цієї сторінки',
         notAllFields:'Не всі поля заповнено',
+        tooLargeField:'Поле занадто довге',
         email:'E-mail',
         pass:'Пароль',
         name:'Им\'я',
@@ -26,6 +27,7 @@ _i18n.bundle = {
         IAgreeWith:'Я погоджуюсь із політикою конфіденційності цього програмного забезпечення',
         incorrectCredentials:'Користувача з такими даними не зареєстровано в системі',
         userActivation:'Управління користувачами в системі',
+        success:'Дія виконана успішно',
 
         'undefined':'Не визначено',
         doctor:'Лікар',
@@ -41,7 +43,8 @@ _i18n.bundle = {
         department:'Відділ',
         actions:'Дії',
         departments:'Управління відділами підприємства',
-        departmentName:'Назва відділу'
+        departmentName:'Назва відділу',
+        addDepartment:'Створити відділ'
     }
 };
 
