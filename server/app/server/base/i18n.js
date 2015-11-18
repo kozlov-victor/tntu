@@ -49,7 +49,12 @@ _i18n.bundle = {
         addCar:'Додати',
         carNumber:'Номер автомобіля',
         carModel:'Модель автомобіля',
-        carDescription:'Додатково'
+        carDescription:'Додатково',
+        schedules:'Графіки роботи',
+        addSchedule:'Новий графік роботи',
+        month:'Місяць',
+        year:'Рік',
+        createSchedule:'Створити графік'
     }
 };
 

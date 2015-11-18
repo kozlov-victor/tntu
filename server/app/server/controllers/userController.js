@@ -6,6 +6,7 @@ const CREATE_USER = 'insert into user (name,mail,password,hash) values (?,?,?,?)
 const GET_EMAIL = 'select id from user where LOWER(mail)=LOWER(?) limit 1';
 const GET_USER_BY_TOKEN = 'select * from user where hash=? limit 1';
 const GET_ALL_USERS = 'select * from user;';
+const GET_ALL_USERS_SORTED_BY_ROLE = 'select * from user order by roleId';
 const GET_USER_BY_MAIL_AND_PASSWORD = 'select * from user where mail=? and password=?';
 const UPDATE_USER = 'UPDATE user SET name=?,active=?,roleId=?,departmentId=? WHERE id=?';
 
@@ -66,6 +67,16 @@ module.exports.getAllUsers = function(){
     return new Promise(function(resolve){
         connector.
             executeQuery(GET_ALL_USERS,[]).
+            then(function(rows){
+                resolve(rows);
+            });
+    });
+};
+
+module.exports.getAllUsersSortedByRole = function(){
+    return new Promise(function(resolve){
+        connector.
+            executeQuery(GET_ALL_USERS_SORTED_BY_ROLE,[]).
             then(function(rows){
                 resolve(rows);
             });
