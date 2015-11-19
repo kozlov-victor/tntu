@@ -7,6 +7,8 @@ var utils = require('../utils/utils');
 var userController = require('../controllers/userController');
 var userValidator = require('../validators/userValidator');
 var scheduleController = require('../controllers/scheduleController');
+var teamController = require('../controllers/teamController');
+var departmentController = require('../controllers/departmentController');
 
 module.exports.init = function(app){
 
@@ -38,7 +40,10 @@ module.exports.init = function(app){
                 }
             }).
             then(function(){
-                res.render('addScheduleForm',utils.parametrize({}));
+                return departmentController.getAllDepartments();
+            }).
+            then(function(departments){
+                res.render('addScheduleForm',utils.parametrize({departments:departments}));
             });
     });
 
@@ -46,11 +51,17 @@ module.exports.init = function(app){
         var token = req.session.token;
         var users;
         var shiftTypes;
+        var teams;
+        var month = req.query.month;
+        var year = req.query.year;
+        console.log('accepted params',month,year);
+        var numOfDaysInMonth = scheduleController.getNumOfDaysInMonth(month,year);
         userController.
             getUserByToken(token).
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
+                    res.render('accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
@@ -61,12 +72,41 @@ module.exports.init = function(app){
                 users = _users;
             }).
             then(function(){
+                return teamController.getAllTeams();
+            }).
+            then(function(_teams){
+                teams = _teams;
+            }).
+            then(function(){
                 return scheduleController.getAllShiftTypes()
             }).
-
             then(function(_shiftTypes){
                 shiftTypes = _shiftTypes;
-                res.send({users:users,shiftTypes:shiftTypes});
+                res.render('createScheduleForm',utils.parametrize(
+                    {
+                        users:users,
+                        shiftTypes:shiftTypes,
+                        numOfDaysInMonth:numOfDaysInMonth,
+                        teams:teams
+                    })
+                );
+            });
+    });
+
+    app.post('/createSchedule',function(req,res){
+        console.log('request body',req.body);
+        var month = req.body.month;
+        var year = req.body.year;
+        var edited = req.body.edited;
+        var departmentId = req.body.departmentId;
+        console.log('departmentId',departmentId);
+        scheduleController.createSchedule(month,year,departmentId)
+            .then(function(id){
+                console.log('id',id);
+                return scheduleController.createScheduleLines(id,edited);
+            }).
+            then(function(){
+                res.send({success:true,message:i18n.get('success')});
             });
     });
 

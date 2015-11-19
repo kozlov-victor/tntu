@@ -12,7 +12,8 @@ _i18n.bundle = {
         tooLargeField:'Поле занадто довге',
         email:'E-mail',
         pass:'Пароль',
-        name:'Им\'я',
+        name:'Ім\'я',
+        shortName:'Скорочене ім\'я',
         enter:'Увійти',
         save:'Зберігти',
         forgotPass:'Забули пароль',
@@ -54,7 +55,10 @@ _i18n.bundle = {
         addSchedule:'Новий графік роботи',
         month:'Місяць',
         year:'Рік',
-        createSchedule:'Створити графік'
+        createSchedule:'Створити графік',
+        empl:'Співробітник',
+        teams:'Бригади',
+        addTeam:'Додати бригаду'
     }
 };
 

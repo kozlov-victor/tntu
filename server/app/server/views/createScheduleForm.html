@@ -1,0 +1,84 @@
+<table id="schedule" class="bordered">
+    <tr>
+        <td>
+            <%=i18n.empl%>
+        </td>
+        <%for (var day=1;day<=numOfDaysInMonth;day++) {%>
+        <td>
+            <%=day%>
+        </td>
+        <%};%>
+    </tr>
+    <%users.forEach(function(user){%>
+    <tr>
+        <td>
+            <%=user.name%>
+        </td>
+        <%for (var day=1;day<=numOfDaysInMonth;day++) {%>
+        <td data-user-id="<%=user.id%>" data-day="<%=day%>">
+            <input data-action="toggleCell" type="checkbox"/>
+            <div class="centerAligned" data-content="cell" style="display: none;">
+                <select name="shiftType" class="">
+                    <%shiftTypes.forEach(function(shiftType){%>
+                    <option  value="<%=shiftType.id%>"><%=shiftType.code%></option>
+                    <%});%>
+                </select>
+                <select name="team" class="">
+                    <%teams.forEach(function(team){%>
+                    <option  value="<%=team.id%>"><%=team.shortName%></option>
+                    <%});%>
+                </select>
+                <input type="checkbox" name="done"/>
+            </div>
+        </td>
+        <%};%>
+    </tr>
+    <%});%>
+</table>
+<div id="result"></div>
+
+<button id="save"><%=i18n.save%></button>
+
+<script type="text/javascript">
+    $(function(){
+
+        $(document).on('click','[data-action="toggleCell"]',function(e){
+            var visible = $(this).is(':checked');
+            var cell = $(this).closest('td').find('[data-content="cell"]');
+            if (visible) cell.show();
+            else cell.hide();
+        });
+        $(document).on('change select','input,select',function(){
+            var cell = $(this).closest('td');
+            cell.attr('data-edited','yes');
+        });
+
+    });
+
+    $(document).on('click','#save',function(){
+        var editedCells = $('td[data-edited]');
+        var edited = [];
+        $.each(editedCells,function(){
+            var toggleCell = $(this).find('[data-action="toggleCell"]');
+            if (!toggleCell.is(':checked')) return;
+            var obj = {
+                dayOfMonth:$(this).data('day'),
+                userId:$(this).data('user-id'),
+                shiftTypeId:$(this).find('[name=shiftType]').val(),
+                teamId:$(this).find('[name=team]').val(),
+                done:$(this).find('[name=done]').is(':checked')?1:0
+            };
+            edited.push(obj);
+        });
+        console.log(edited);
+        $.post('/createSchedule',{
+            edited:edited,
+            month:$('#month').val(),
+            year:$('#year').val(),
+            departmentId:$('#department').val()
+        },function(data){
+            $('#result').html(data.message);
+        });
+    });
+
+</script>

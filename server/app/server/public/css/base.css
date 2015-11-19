@@ -38,3 +38,15 @@ table.centered a{
 .centerAligned {
     text-align: center;
 }
+
+table.bordered {
+    border-collapse: collapse;
+}
+
+table.bordered td {
+    border: 1px solid black;
+}
+
+.block {
+    display: block;
+}

@@ -1,0 +1,54 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.addTeam%></h1>
+<div id="result" class="centerAligned"></div>
+
+
+<div>
+    <form id="addTeamForm">
+        <table class="centered">
+            <tr>
+                <td>
+                    <%=i18n.name%>
+                </td>
+                <td>
+                    <input class="width100" type="text" name="name"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%=i18n.shortName%>
+                </td>
+                <td>
+                    <input class="width100" type="text" name="shortName"/>
+                </td>
+            </tr>
+                <td colspan="2">
+                    <button class="width100" id="addTeam">
+                        <%=i18n.addTeam%>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<a href="/teams"><%=i18n.teams%></a>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $(document).on('click','#addTeam',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            $.get('/addTeam',$('#addTeamForm').serialize(),function(data){
+                $('#result').html(data.message);
+            });
+        });
+
+    });
+
+</script>
+
+<%include includes/footer.html%>

@@ -24,10 +24,22 @@
        <td>
            <select id="year">
                <%yearArr.forEach(function(y){%>
-                    <option value="<%%=y>"><%=y%></option>
+                    <option value="<%=y%>"><%=y%></option>
                <%});%>
            </select>
        </td>
+    </tr>
+    <tr>
+        <td>
+            <%=i18n.department%>
+        </td>
+        <td>
+            <select id="department">
+                <%departments.forEach(function(d){%>
+                <option value="<%=d.id%>"><%=d.name%></option>
+                <%});%>
+            </select>
+        </td>
     </tr>
     <tr>
         <td colspan="2">
@@ -37,5 +49,24 @@
 
 </table>
 
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $(document).on('click','#createSchedule',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            $.get('/createScheduleForm',{month:$('#month').val(),year:$('#year').val()},function(html){
+                $('#renderedTable').html(html);
+            });
+        });
+
+    });
+
+
+</script>
+
+<div id="renderedTable"></div>
 
 <%include includes/footer.html%>

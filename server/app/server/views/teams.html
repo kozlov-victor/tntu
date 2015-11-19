@@ -1,0 +1,63 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.teams%></h1>
+<div id="result" class=""></div>
+<table>
+    <tr>
+        <th>
+            <%=i18n.number%>
+        </th>
+        <th>
+            <%=i18n.name%>
+        </th>
+        <th>
+            <%=i18n.shortName%>
+        </th>
+        <th>
+            <%=i18n.actions%>
+        </th>
+    </tr>
+    <%teams.forEach(function(team){%>
+    <tr data-id="<%=team.id%>">
+        <td>
+            <%=team.id%>
+        </td>
+        <td>
+            <input data-field="name" type="text" value="<%=team.name%>"/>
+        </td>
+        <td>
+            <input data-field="shortName" type="text" value="<%=team.shortName%>"/>
+        </td>
+        <td>
+            <button data-action="updateTeam">
+                <%=i18n.save%>
+            </button>
+        </td>
+
+    </tr>
+    <%})%>
+</table>
+
+<a href="/addTeamForm"><%=i18n.addTeam%></a>
+
+<script type="text/javascript">
+
+    $(document).on('click','[data-action=updateTeam]',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var row = $(this).closest('tr');
+        var options = {
+            id: row.data('id'),
+            name:row.find('[data-field=name]').val(),
+            shortName:row.find('[data-field=shortName]').val()
+        };
+        console.log(options);
+        $.get('/updateTeam',options,function(data){
+            $('#result').html(data.message);
+        });
+
+    });
+
+</script>
+
+<%include includes/footer.html%>

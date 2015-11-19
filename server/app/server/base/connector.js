@@ -23,7 +23,7 @@ var dbConnect = function(connection) {
 
 var dbQuery = function(connection,queryStr,params) {
     return new Promise(function(resolve,reject){
-        console.log('query:',queryStr,params);
+        //console.log('query:',queryStr,params);
         connection.query(queryStr,params,function(err,rows){
             if(err) throw err;
             resolve(rows);
@@ -46,9 +46,11 @@ var executeQuery = function(query,params) {
             }).
             then(function(rows){
                 rows=rows||[];
-                console.log('accepted rows',rows);
+                //console.log('accepted rows',rows);
                 dbClose(con);
                 resolve(rows);
+            }).catch(function(e){
+                console.log('error:',e);
             });
     });
 

@@ -4,3 +4,4 @@ npm install html
 npm install ejs
 npm install cookie-parser
 npm install express-session
+npm install --save body-parser
