@@ -1,0 +1,52 @@
+<%include includes/header.html%>
+
+<h1><%=i18n.teamToCar%></h1>
+<table id="teamCarTbl" class="width100 bordered">
+    <%teams.forEach(function(team){%>
+    <%  var getTeamCarId = function(teamId) {%>
+    <%  for (var i=0;i< teamToCars.length;i++) {%>
+    <%      if (teamToCars[i].teamId==teamId) return teamToCars[i].carId;%>
+    <%  }%>
+    <%  return null;%>
+    <%}%>
+    <tr>
+        <td data-content="team" data-team-id="<%=team.id%>">
+            <%=team.name%> (<%=team.shortName%>)
+        </td>
+        <td>
+            <%var teamCarId = getTeamCarId(team.id);%>
+            <select data-content="car">
+            <%cars.forEach(function(car){%>
+                <%var selected = teamCarId==car.id?'selected="selected"':'';%>
+                <option <%=selected%> value="<%=car.id%>"><%=car.number%>(<%=car.model%>)</option>
+            <%});%>
+            </select>
+        </td>
+    </tr>
+    <%});%>
+</table>
+<button id="save"><%=i18n.save%></button>
+<br/>
+<div id="result"></div>
+
+<script type="text/javascript">
+    $(function(){
+        $(document).on('click','#save',function(){
+            var res = [];
+            $('#teamCarTbl tr').each(function(i,el){
+                var item = {};
+                var teamEl = $(el).find('[data-content="team"]');
+                var carEl = $(el).find('[data-content="car"]');
+                item.teamId = teamEl.data('team-id');
+                item.carId = carEl.val();
+                res.push(item);
+            });
+            var opts = {teamToCar:res};
+            $.post('/saveTeamToCar',opts,function(data){
+                $('#result').html(data.message);
+            });
+        })
+    });
+</script>
+
+<%include includes/footer.html%>

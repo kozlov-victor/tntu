@@ -7,7 +7,7 @@ var userController = require('../controllers/userController');
 var userValidator = require('../validators/userValidator');
 var teamValidator = require('../validators/teamValidator');
 var teamController = require('../controllers/teamController');
-
+var carController = require('../controllers/carController');
 
 module.exports.init = function(app) {
 
@@ -44,6 +44,51 @@ module.exports.init = function(app) {
                     res.render('addTeamForm',utils.parametrize({}));
                 }
             })
+    });
+
+    app.get('/teamToCarForm',function(req,res){
+        var token = req.session.token;
+        var teams;
+        var cars;
+        var teamToCars;
+        userController.
+            getUserByToken(token).
+            then(function(user){
+                if (!userValidator.canWorksAsAdmin(user)) {
+                    res.render('accessDenied',utils.parametrize({}));
+                    console.log('security error');
+                    throw 'access denied';
+                }
+            }).
+            then(function(){
+                return teamController.getAllTeams()
+            }).
+            then(function(_teams){
+                console.log('accepted teams');
+                teams = _teams;
+            }).
+            then(function(){
+                return carController.getAllCars()
+            }).
+            then(function(_cars){
+                console.log('accepted cars');
+                cars = _cars;
+            }).
+            then(function(){
+                return teamController.getAllTeamToCars()
+            }).
+            then(function(_teamToCars){
+                console.log('accepted teamToCars');
+                teamToCars = _teamToCars;
+            }).
+            then(function(){
+                console.log('rendering');
+                res.render('teamToCarForm',utils.parametrize({
+                    teams:teams,
+                    cars:cars,
+                    teamToCars:teamToCars
+                }));
+            });
     });
 
     app.get('/updateTeam',function(req,res){
@@ -102,6 +147,15 @@ module.exports.init = function(app) {
             }).
             then(function(){
                 console.log('added');
+                res.send({success:true,message:i18n.get('success')});
+            });
+    });
+
+    app.post('/saveTeamToCar',function(req,res){
+        var opts = req.body.teamToCar;
+        teamController.updateTeamToCars(opts)
+            .then(function(){
+                console.log('query executed with success');
                 res.send({success:true,message:i18n.get('success')});
             });
     });
