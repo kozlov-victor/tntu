@@ -50,3 +50,11 @@ table.bordered td {
 .block {
     display: block;
 }
+
+.small {
+    font-size: 12px;
+}
+
+.mono {
+    font-family: monospace;
+}

@@ -61,7 +61,10 @@ _i18n.bundle = {
         addTeam:'Додати бригаду',
         teamToCar:'Бригади і транспортні ресурси',
         details:'Докладніше',
-        goto:'Перейти'
+        goto:'Перейти',
+        callsManagement:'Управління викликами',
+        archive:'Архів',
+        nowDay:'Сьогодні',
     }
 };
 

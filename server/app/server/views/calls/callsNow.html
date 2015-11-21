@@ -1,0 +1,45 @@
+<%include ../includes/header.html%>
+
+<h1><%=i18n.nowDay%></h1>
+<div class="small mono" id="timer"></div>
+
+<%- JSON.stringify(calls)%>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        var dateToStr = function(date){
+            var normalizeLength = function(val) {
+                if ((''+val).length==1) val='0'+val;
+                return val;
+            };
+            var d = new Date(date);
+            var day = normalizeLength(d.getDate());
+            var month = normalizeLength(d.getMonth()+1);
+            var year = d.getFullYear();
+            var h = normalizeLength(d.getHours());
+            var m = normalizeLength(d.getMinutes());
+            var s = normalizeLength(d.getSeconds());
+            return {
+                date:day + '.' + month +'.' + year,
+                time: h +':' + m +':' +s
+            }
+        };
+
+        var starTime = <%=time%>;
+        var startTimeStamp = new Date().getTime();
+
+        setInterval(function(){
+            var delta = new Date().getTime() - startTimeStamp;
+            var time = starTime + delta;
+            var dObj = dateToStr(time);
+            var s = dObj.date +' '+ dObj.time;
+            $('#timer').html(s);
+        },1000);
+
+    });
+
+</script>
+
+<%include ../includes/footer.html%>
