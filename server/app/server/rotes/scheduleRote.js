@@ -19,12 +19,12 @@ module.exports.init = function(app){
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
             then(function(){
-                res.render('schedules',utils.parametrize({}));
+                res.render('schedules/schedules',utils.parametrize({}));
             });
     });
 
@@ -35,7 +35,7 @@ module.exports.init = function(app){
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
@@ -43,12 +43,11 @@ module.exports.init = function(app){
                 return departmentController.getAllDepartments();
             }).
             then(function(departments){
-                res.render('addScheduleForm',utils.parametrize({departments:departments}));
+                res.render('schedules/addScheduleForm',utils.parametrize({departments:departments}));
             });
     });
 
     app.get('/createScheduleForm',function(req,res){
-        var token = req.session.token;
         var users;
         var shiftTypes;
         var teams;
@@ -57,11 +56,11 @@ module.exports.init = function(app){
         console.log('accepted params',month,year);
         var numOfDaysInMonth = scheduleController.getNumOfDaysInMonth(month,year);
         userController.
-            getUserByToken(token).
+            getUserByToken(req.session.token).
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
@@ -82,12 +81,15 @@ module.exports.init = function(app){
             }).
             then(function(_shiftTypes){
                 shiftTypes = _shiftTypes;
-                res.render('createScheduleForm',utils.parametrize(
+                res.render('schedules/createScheduleForm',utils.parametrize(
                     {
                         users:users,
                         shiftTypes:shiftTypes,
                         numOfDaysInMonth:numOfDaysInMonth,
-                        teams:teams
+                        teams:teams,
+                        scheduleLines:[],
+                        manageType:'create',
+                        scheduleId:null
                     })
                 );
             });
@@ -97,16 +99,106 @@ module.exports.init = function(app){
         console.log('request body',req.body);
         var month = req.body.month;
         var year = req.body.year;
-        var edited = req.body.edited;
+        var created = req.body.created;
         var departmentId = req.body.departmentId;
         console.log('departmentId',departmentId);
         scheduleController.createSchedule(month,year,departmentId)
             .then(function(id){
                 console.log('id',id);
-                return scheduleController.createScheduleLines(id,edited);
+                return scheduleController.createScheduleLines(id,created);
             }).
             then(function(){
                 res.send({success:true,message:i18n.get('success')});
+            });
+    });
+
+    app.post('/updateScheduleLines',function(req,res){
+        var creaded = req.body.created;
+        var updated = req.body.updated;
+        var deleted = req.body.deleted;
+        var scheduleId = req.body.scheduleId;
+        console.log('created',creaded);
+        console.log('updated',updated);
+        console.log('deleted',deleted);
+        console.log('scheduleId',scheduleId);
+        userController.
+            getUserByToken(req.session.token).
+            then(function(user){
+                console.log('accepted user by token: ',user);
+                if (!userValidator.canWorksAsAdmin(user)) {
+                    throw 'access denied';
+                }
+            }).
+            then(function(){
+                return scheduleController.createScheduleLines(scheduleId,creaded)
+            }).
+            then(function(){
+                return scheduleController.updateScheduleLines(updated)
+            }).
+            then(function(){
+                return scheduleController.deleteScheduleLines(deleted)
+            }).
+            then(function(){
+                res.send({success:true,message:i18n.get('success')});
+            });
+    });
+
+    app.get('/scheduleListByYear',function(req,res){
+        var dataToSend = {};
+        var year = req.query.year;
+        dataToSend.year = year;
+        scheduleController.getScheduleListByYear(year)
+            .then(function(sch){
+                dataToSend.schedules = sch;
+                res.render('schedules/scheduleListByYear',utils.parametrize(dataToSend));
+            })
+    });
+
+
+    app.get('/editScheduleForm',function(req,res){
+        var scheduleId = req.query.id;
+        var month = req.query.month;
+        var year = req.query.year;
+        var opts = {};
+        opts.manageType = 'update';
+        opts.scheduleId = scheduleId;
+        opts.numOfDaysInMonth = scheduleController.getNumOfDaysInMonth(month,year);
+        var token = req.session.token;
+        userController.
+            getUserByToken(token).
+            then(function(user){
+                console.log('accepted user by token: ',user);
+                if (!userValidator.canWorksAsAdmin(user)) {
+                    res.render('user/accessDenied',utils.parametrize({}));
+                    throw 'access denied';
+                }
+            }).
+            then(function(){
+                return scheduleController.getScheduleLinesByScheduleId(scheduleId)
+            }).
+            then(function(lines){
+                opts.scheduleLines = lines;
+            }).
+            then(function(){
+                return userController.getAllUsersSortedByRole();
+            }).
+            then(function(_users){
+                opts.users = _users;
+            }).
+            then(function(){
+                return teamController.getAllTeams();
+            }).
+            then(function(_teams){
+                opts.teams = _teams;
+            }).
+            then(function(){
+                return scheduleController.getAllShiftTypes()
+            }).
+            then(function(_shiftTypes){
+                opts.shiftTypes = _shiftTypes;
+            }).
+            then(function(){
+                res.render('schedules/editScheduleForm',utils.parametrize(opts));
             });
     });
 

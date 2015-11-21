@@ -1,0 +1,134 @@
+<table id="schedule" class="bordered" data-schedule-id="<%=scheduleId%>">
+    <tr>
+        <td>
+            <%=i18n.empl%>
+        </td>
+        <%for (var day=1;day<=numOfDaysInMonth;day++) {%>
+        <td>
+            <%=day%>
+        </td>
+        <%};%>
+    </tr>
+    <%users.forEach(function(user){%>
+    <tr data-row-user="<%=user.id%>">
+        <td>
+            <%=user.name%>
+        </td>
+        <%for (var day=1;day<=numOfDaysInMonth;day++) {%>
+        <td data-user-id="<%=user.id%>" data-day="<%=day%>">
+            <input data-action="toggleCell" type="checkbox"/>
+            <div class="centerAligned" data-content="cell" style="display: none;">
+                <select name="shiftType" class="">
+                    <%shiftTypes.forEach(function(shiftType){%>
+                    <option  value="<%=shiftType.id%>"><%=shiftType.code%></option>
+                    <%});%>
+                </select>
+                <select name="team" class="">
+                    <%teams.forEach(function(team){%>
+                    <option  value="<%=team.id%>"><%=team.shortName%></option>
+                    <%});%>
+                </select>
+                <input type="checkbox" name="done"/>
+            </div>
+        </td>
+        <%};%>
+    </tr>
+    <%});%>
+</table>
+<div id="result"></div>
+
+<button id="save"><%=i18n.save%></button>
+
+<script type="text/javascript">
+    $(function(){
+
+        var scheduleLines = <%-JSON.stringify(scheduleLines)%>;
+        var manageType = '<%=manageType%>';
+        var scheduleId = $('#schedule').attr('data-schedule-id');
+
+        var processScheduleLines = function() {
+            if (!scheduleLines.length) return;
+            scheduleLines.forEach(function(line){
+                var targetTableRow = $('tr[data-row-user='+line.userId+']');
+                var targetCell = targetTableRow.find('[data-day="'+line.dayOfMonth+'"]');
+                targetCell.attr('data-line',line.id);
+                targetCell.find('[data-action=toggleCell]').trigger('click');
+                targetCell.find('[data-content=cell]').show();
+                targetCell.find('[name=shiftType]').val(line.shiftTypeId);
+                targetCell.find('[name=team]').val(line.teamId);
+                if (line.done==1) targetCell.find('[name=done]').attr('checked','checked');
+            });
+        };
+
+        processScheduleLines();
+
+        $(document).on('click','[data-action="toggleCell"]',function(e){
+            var visible = $(this).is(':checked');
+            var cell = $(this).closest('td').find('[data-content="cell"]');
+            if (visible) cell.show();
+            else cell.hide();
+        });
+        $(document).on('change select','input,select',function(){
+            var cell = $(this).closest('td');
+            cell.attr('data-edited','yes');
+        });
+
+        $(document).on('click','#save',function(){
+            var editedCells = $('td[data-edited]');
+            var created = [];
+            var updated = [];
+            var deleted = [];
+            $.each(editedCells,function(i,cell){
+                var obj = {
+                    dayOfMonth:$(this).data('day'),
+                    userId:$(this).data('user-id'),
+                    shiftTypeId:$(this).find('[name=shiftType]').val(),
+                    teamId:$(this).find('[name=team]').val(),
+                    done:$(this).find('[name=done]').is(':checked')?1:0,
+                    lineId:$(this).data('line')
+                };
+                var toggleCell = $(this).find('[data-action="toggleCell"]');
+                if (!toggleCell.is(':checked')) {
+                    if ($(this).attr('data-line')) {
+                        deleted.push({lineId:$(this).attr('data-line')});
+                    }
+                    return;
+                }
+                if ($(this).attr('data-line')) {
+                    updated.push(obj);
+                } else {
+                    created.push(obj);
+                }
+            });
+            console.log('scheduleId',scheduleId);
+            console.log('created',created);
+            console.log('deleted',deleted);
+            console.log('updated',updated);
+
+            if (manageType=='create') {
+                $.post('/createSchedule',{
+                    created:created,
+                    month:$('#month').val(),
+                    year:$('#year').val(),
+                    departmentId:$('#department').val()
+                },function(data){
+                    $('#result').html(data.message);
+                });
+            } else if (manageType=='update'){
+                $.post('/updateScheduleLines',{
+                    created:created,
+                    updated:updated,
+                    deleted:deleted,
+                    scheduleId:scheduleId
+                },function(data){
+                    $('#result').html(data.message);
+                });
+            } else throw 'specify manageType variable';
+
+        });
+
+    });
+
+
+
+</script>

@@ -18,14 +18,14 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
             then(function(){
                 return teamController.getAllTeams()
             }).then(function(teams){
-                res.render('teams',utils.parametrize({teams:teams}));
+                res.render('teams/teams',utils.parametrize({teams:teams}));
             });
     });
 
@@ -36,12 +36,12 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('addCarform: accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     console.log('security error');
                     throw 'access denied';
                 } else {
                     console.log('rendering page');
-                    res.render('addTeamForm',utils.parametrize({}));
+                    res.render('teams/addTeamForm',utils.parametrize({}));
                 }
             })
     });
@@ -55,7 +55,7 @@ module.exports.init = function(app) {
             getUserByToken(token).
             then(function(user){
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     console.log('security error');
                     throw 'access denied';
                 }
@@ -83,7 +83,7 @@ module.exports.init = function(app) {
             }).
             then(function(){
                 console.log('rendering');
-                res.render('teamToCarForm',utils.parametrize({
+                res.render('teams/teamToCarForm',utils.parametrize({
                     teams:teams,
                     cars:cars,
                     teamToCars:teamToCars

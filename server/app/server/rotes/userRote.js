@@ -18,15 +18,15 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                 } else {
-                    res.render('admin',utils.parametrize({}));
+                    res.render('user/admin',utils.parametrize({}));
                 }
             });
     });
 
     app.get('/registerForm',function(req,res){
-        res.render('registerForm',utils.parametrize());
+        res.render('user/registerForm',utils.parametrize());
     });
 
 
@@ -40,7 +40,7 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                 } else {
                     userRolesController.getAllUserRoles().
                     then(function(_allUserRoles){
@@ -57,14 +57,14 @@ module.exports.init = function(app) {
                     }).
                     then(function(users){
                         console.log('allUserRoles',allUserRoles);
-                        res.render('userActivation',utils.parametrize({users:users,allUserRoles:allUserRoles,allDepartments:allDepartments}));
+                        res.render('user/userActivation',utils.parametrize({users:users,allUserRoles:allUserRoles,allDepartments:allDepartments}));
                     });
                 }
             });
     });
 
     app.get('/authForm', function (req, res) {
-        res.render('authForm',utils.parametrize());
+        res.render('user/authForm',utils.parametrize());
     });
 
     app.get('/auth', function (req, res) {

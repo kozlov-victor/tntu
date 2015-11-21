@@ -38,6 +38,7 @@ var dbClose = function(connection) {
 };
 
 var executeQuery = function(query,params) {
+    console.log('exec query',query);
     return new Promise(function(resolve,reject){
         var con = dbGetConnection();
         dbConnect(con).

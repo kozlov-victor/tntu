@@ -18,14 +18,14 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
             then(function(){
                 return departmentController.getAllDepartments()
             }).then(function(departments){
-                res.render('departments',utils.parametrize({departments:departments}));
+                res.render('departments/departments',utils.parametrize({departments:departments}));
             });
     });
 
@@ -36,10 +36,10 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 } else {
-                    res.render('addDepartment',utils.parametrize());
+                    res.render('departments/addDepartment',utils.parametrize());
                 }
             });
     });

@@ -18,14 +18,14 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     throw 'access denied';
                 }
             }).
             then(function(){
                 return carController.getAllCars()
             }).then(function(cars){
-                res.render('cars',utils.parametrize({cars:cars}));
+                res.render('cars/cars',utils.parametrize({cars:cars}));
             });
     });
 
@@ -36,12 +36,12 @@ module.exports.init = function(app) {
             then(function(user){
                 console.log('addCarform: accepted user by token: ',user);
                 if (!userValidator.canWorksAsAdmin(user)) {
-                    res.render('accessDenied',utils.parametrize({}));
+                    res.render('user/accessDenied',utils.parametrize({}));
                     console.log('security error');
                     throw 'access denied';
                 } else {
                     console.log('rendering page');
-                    res.render('addCarForm',utils.parametrize({}));
+                    res.render('cars/addCarForm',utils.parametrize({}));
                 }
             })
     });

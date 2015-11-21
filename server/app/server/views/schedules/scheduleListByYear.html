@@ -1,0 +1,32 @@
+<table>
+    <tr>
+       <th>
+           <%=i18n.year%>
+       </th>
+       <th>
+           <%=i18n.month%>
+       </th>
+        <th>
+            <%=i18n.department%>
+        </th>
+        <th>
+            <%=i18n.details%>
+        </th>
+    </tr>
+    <%schedules.forEach(function(sch){%>
+    <tr>
+        <td>
+            <%=sch.year%>
+        </td>
+        <td>
+            <%=sch.month%>
+        </td>
+        <td>
+            <%=sch.departmentName%>
+        </td>
+        <td>
+            <a href="/editScheduleForm?id=<%=sch.id%>&month=<%=sch.month%>&year=<%=sch.year%>"><%=i18n.goto%></a>
+        </td>
+    </tr>
+    <%});%>
+</table>

@@ -1,0 +1,22 @@
+<%include ../includes/header.html%>
+
+<% var currYear = new Date().getFullYear();%>
+<select id="currYear">
+    <%for (var i=currYear-10;i< currYear+10;i++){%>
+    <%var selected = i==currYear?'selected="selected"':'';%>
+    <option <%=selected%> value="<%=i%>"><%=i%></option>
+    <%}%>
+</select>
+<div id="schedules"></div>
+<br/>
+<a href="/addScheduleForm"><%=i18n.addSchedule%></a>
+
+<script type="text/javascript">
+    $(function(){
+        $.get('/scheduleListByYear',{year:$('#currYear').val()},function(html){
+            $('#schedules').html(html);
+        });
+    })
+</script>
+
+<%include ../includes/footer.html%>
