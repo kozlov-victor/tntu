@@ -1,0 +1,64 @@
+<%include ../includes/header.html%>
+
+<h1><%=i18n.callsManagement%></h1>
+<%=i18n.archive%>
+<table>
+    <tr>
+        <td>
+            <label for="from"><%=i18n.from%></label>
+        </td>
+        <td>
+            <input type="date" id="from"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="to"><%=i18n.to%></label>
+        </td>
+        <td>
+            <input type="date" id="to"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button id="search">
+                <%=i18n.search%>
+            </button>
+        </td>
+    </tr>
+</table>
+
+<div id="searchResult"></div>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        var getTimeStampFromInput = function(inputId){
+            var val = $('#'+inputId).val();
+            if (!val) return null;
+            return new Date(val).getTime()
+        };
+
+        $(document).on('click','#search',function(){
+            var dateFrom = getTimeStampFromInput('from');
+            var dateTo = getTimeStampFromInput('to');
+            console.log('dates',dateFrom,dateTo);
+            $.get(
+                    '/getCallsSearchList',
+                    {
+                        dateFrom:dateFrom,
+                        dateTo:dateTo
+                    },
+                    function(html){
+                        $('#searchResult').html(html);
+                    }
+            );
+        });
+
+    });
+
+</script>
+
+
+<%include ../includes/footer.html%>

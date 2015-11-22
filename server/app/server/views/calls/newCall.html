@@ -1,0 +1,67 @@
+<%include ../includes/header.html%>
+
+<h1><%=i18n.newCall%>&nbsp;</h1>
+<form id="newCallForm">
+    <table>
+        <tr>
+            <td>
+                <%=i18n.phone%>
+            </td>
+            <td>
+                <input name="inPhone"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <%=i18n.address%>
+            </td>
+            <td>
+                <input name="address"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <%=i18n.description%>
+            </td>
+            <td>
+                <textarea name="description"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select name="teamId">
+                    <%teams.forEach(function(team){%>
+                    <option value="<%=team.id%>"><%=team.shortName%></option>
+                    <%});%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="create">
+                    <%=i18n.create%>
+                </button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+<div id="result"></div>
+<a href="/callsNow"><%=i18n.nowDay%></a>
+
+<script type="text/javascript">
+    $(function(){
+
+        $(document).on('click','#create',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            $.get('/createNewCall',$('#newCallForm').serialize(),function(data){
+                $('#result').html(data.message);
+            });
+        })
+
+    });
+</script>
+
+<%include ../includes/footer.html%>

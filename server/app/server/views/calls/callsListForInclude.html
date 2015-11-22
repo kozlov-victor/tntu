@@ -1,0 +1,50 @@
+<table class="bordered" id="calls">
+    <tr>
+        <th>
+            <%=i18n.phone%>
+        </th>
+        <th>
+            <%=i18n.address%>
+        </th>
+        <th>
+            <%=i18n.description%>
+        </th>
+        <th>
+            <%=i18n.dateCreation%>
+        </th>
+        <th>
+            <%=i18n.dateCompleted%>
+        </th>
+        <th>
+            <%=i18n.team%>
+        </th>
+        <th>
+            <%=i18n.state%>
+        </th>
+    </tr>
+    <%calls.forEach(function(call){%>
+    <tr data-call-id="<%=call.id%>">
+        <td>
+            <%=call.inPhone%>
+        </td>
+        <td>
+            <%=call.address%>
+        </td>
+        <td>
+            <%=call.description%>
+        </td>
+        <td>
+            <%=call.date%>
+        </td>
+        <td>
+            <%=call.dateCompleted%>
+        </td>
+        <td>
+            <%=call.teamShortName%>
+        </td>
+        <td data-cell="status">
+            <%=call.callStatusCode%>
+        </td>
+    </tr>
+    <%});%>
+</table>

@@ -65,6 +65,18 @@ _i18n.bundle = {
         callsManagement:'Управління викликами',
         archive:'Архів',
         nowDay:'Сьогодні',
+        phone: 'Телефон',
+        address: 'Адреса',
+        description: 'Опис',
+        dateCreation: 'Дата створення',
+        dateCompleted: 'Дата завершення',
+        team: 'Бригада',
+        state: 'Стан',
+        from:'З',
+        to:'По',
+        search:'Шукати',
+        create:'Створити',
+        newCall:'Новий виклик'
     }
 };
 

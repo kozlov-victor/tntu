@@ -1,9 +1,11 @@
 <%include ../includes/header.html%>
 
-<h1><%=i18n.nowDay%></h1>
+<h1><%=i18n.nowDay%>&nbsp;</h1>
 <div class="small mono" id="timer"></div>
 
-<%- JSON.stringify(calls)%>
+<%include callsListForInclude.html%>
+
+<a href="/newCallForm"><%=i18n.newCall%></a>
 
 <script type="text/javascript">
 
