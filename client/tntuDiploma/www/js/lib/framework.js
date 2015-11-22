@@ -1,6 +1,29 @@
-'use strict';
 
 (function(){
+
+    // http://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line
+    var TemplateEngine = function(html, options) {
+        var match;
+        var re = /<%(.+?)%>/g,
+            reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
+            code = 'with(obj) { var r=[];\n',
+            cursor = 0,
+            result;
+        var add = function(line, js) {
+            js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+            return add;
+        };
+        while(match = re.exec(html)) {
+            add(html.slice(cursor, match.index))(match[1], true);
+            cursor = match.index + match[0].length;
+        }
+        add(html.substr(cursor, html.length - cursor));
+        code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
+        try { result = new Function('obj', code).apply(options, [options]); }
+        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+        return result;
+    };
 
     var Utils = {};
 
@@ -11,11 +34,13 @@
         return res;
     };
 
+    Utils.__resolveElement = _resolveElement;
+
     Utils.objectToQuery = function(o) {
         if (!o) return '';
         var paramsArr = [];
         for (var key in o) {
-            paramsArr.push([key,encodeURIComponent(o[key])]);
+            paramsArr.push([key,o[key]]);
         }
         return paramsArr.map(function(item){return [item[0]+'='+item[1]]}).join('&');
     };
@@ -24,13 +49,11 @@
         var Request = function(data) {
             data.method = data.method || 'get';
             var postBody = Utils.objectToQuery(data.data);
-            if (data.method=='get' && postBody) {
-                data.url+='?'+postBody;
-            }
+            if (postBody && data.method=='get') data.url+='?'+postBody;
             var xhr=new XMLHttpRequest();
             console.log('invoked ajax with url',data.url);
             xhr.onreadystatechange=function() {
-                console.log(xhr.readyState,xhr.status);
+                //console.log(xhr.readyState,xhr.status);
                 if (xhr.readyState==4) {
                     if ( xhr.status==200 || xhr.status==0) {
                         //console.log('accepted',xhr.responseText);
@@ -106,7 +129,7 @@
         window.addEventListener('load',function(){
             var platform = navigator.platform||'';
             platform = platform.toLowerCase();
-            if (platform.indexOf('mac')==0 || platform.indexOf('win')==0 || platform.indexOf('linux')==0) run(); // to run on desktop
+            if (!window.cordova) run(); // to run on desktop
         });
         document.addEventListener('deviceready', function(){
             run();
@@ -183,7 +206,6 @@
                 Utils.showElement(shader);
             }
         }
-        document.body.style.overflow = 'hidden';
         var contentEl = Utils.byId(contentId);
         Utils.showElement(contentEl,'block');
         Utils.centerVertical(contentEl,window,'absolute');
@@ -192,7 +214,6 @@
     Utils.hideDialog = function(contentId) {
         var shader = Utils.byId('shader');
         var contentEl = Utils.byId(contentId);
-        document.body.style.overflow = 'initial';
         shader && Utils.hideElement(shader);
         contentEl.style.top='100px';
         Utils.hideElement(contentEl);
@@ -206,6 +227,8 @@
     Utils.showSpinner = function(){
         Utils.showDialog('spinnerDialog',{isModal:false});
     };
+
+
 
     Utils.hideSpinner = function() {
         Utils.hideDialog('spinnerDialog');
@@ -223,7 +246,42 @@
             el.onclick = function(e){
                 e.stopPropagation();
                 e.preventDefault();
-                fn && fn();
+                fn && fn(e);
+            };
+        }
+
+    };
+
+    Utils.onMouseUp = function(el,fn) {
+        el = _resolveElement(el);
+        if ('ontouchstart' in el) {
+            el.ontouchend = function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                fn && fn(e);
+            };
+        } else {
+            el.onmouseup = function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                fn && fn(e);
+            };
+        }
+    };
+
+    Utils.onMouseDown = function(el,fn) {
+        el = _resolveElement(el);
+        if ('ontouchstart' in el) {
+            el.ontouchstart = function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                fn && fn(e);
+            };
+        } else {
+            el.onmousedown = function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                fn && fn(e);
             };
         }
 
@@ -279,28 +337,10 @@
         input.dispatchEvent(evt);
     };
 
-    // http://krasimirtsonev.com/blog/article/Javascript-template-engine-in-just-20-line
-    var TemplateEngine = function(html, options) {
-        var match;
-        var re = /<%(.+?)%>/g,
-            reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
-            code = 'with(obj) { var r=[];\n',
-            cursor = 0,
-            result;
-        var add = function(line, js) {
-            js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-            return add;
-        };
-        while(match = re.exec(html)) {
-            add(html.slice(cursor, match.index))(match[1], true);
-            cursor = match.index + match[0].length;
-        }
-        add(html.substr(cursor, html.length - cursor));
-        code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
-        try { result = new Function('obj', code).apply(options, [options]); }
-        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
-        return result;
+    Utils.checkNumericInput = function(input,event){
+        var l = input.getAttribute('maxlength');
+        if (l && input.value.length>l) return false;
+        return event.charCode >= 48 && event.charCode <= 57;
     };
 
     var templates = {};
@@ -332,43 +372,44 @@
         return date+'&nbsp;'+month;
     };
 
+    var scrollTimerId;
 
     Utils.observeListOverScrollDown = function(containerId,onOverScrolledFn) {
-        console.log('observeListOverScrollDown invoked');
+
+        var mainEl = document.querySelector('main');
         var _onScroll = function(e){
-            console.log('onscroll invoked');
             var lastEl = document.querySelector('#'+containerId+' [data-has-next="true"]');
             if (!lastEl) return;
-            console.log(lastEl);
             if (lastEl.getBoundingClientRect().top<screen.height) {
+                console.log('captured overScroll');
                 if (lastEl.ajaxed) return;
                 lastEl.ajaxed = true;
                 console.log('onOverscrollfn before invoked');
                 onOverScrolledFn();
             }
         };
-        var lastTop = document.body.scrollTop;
-        if ('ontouchmove' in document.body) {
+        var lastTop = mainEl.scrollTop;
+        if ('ontouchmove' in mainEl) {
             console.log('ontouchmove');
-            document.ontouchmove = function(e){
-                if (lastTop!=document.body.scrollTop) {
-                    lastTop = document.body.scrollTop;
-                    _onScroll(e);
+            scrollTimerId = setInterval(function(){
+                if (lastTop!=mainEl.scrollTop) {
+                    lastTop = mainEl.scrollTop;
+                    _onScroll();
                 }
-            }
+            },100);
         } else {
-            console.log('no ontouchmove');
-            document.onscroll = function(e){_onScroll(e)};
+            mainEl.onscroll = function(e){_onScroll(e)};
         }
 
     };
 
     Utils.stopObserverListOverScroll = function() {
         console.log('stopObserverListOverScroll invoked');
-        if ('ontouchmove' in document.body) {
-            document.ontouchmove = null;
+        var mainEl = document.querySelector('main');
+        if ('ontouchmove' in mainEl) {
+            clearInterval(scrollTimerId);
         } else {
-            document.onscroll = null;
+            mainEl.onscroll = null;
         }
     };
 
@@ -427,6 +468,9 @@
 
     Utils.Queue = function(){
         var self = this;
+        this.size = function(){
+            return tasksTotal;
+        };
         this.onResolved = null;
         var tasksTotal = 0;
         var tasksResolved = 0;
@@ -449,15 +493,17 @@
         return res;
     };
 
+    Utils.toggleClass = function(el,className) {
+        el.classList.toggle(className);
+    };
+
     window.Utils = Utils;
 
-})();
 
-
-
-(function () {
+    //--------------CommonController-------------------
 
     var KEY_WORD_PAGE_ID = 'kw_pageId';
+    var EXECUTE = 'execute';
 
     var CommonController = {};
 
@@ -511,19 +557,6 @@
        });
     };
 
-    var fixFixedPositionIos = function () {
-        Utils.forEachEl('input[type=text],input[type=password],input[type=email],textarea',function(el){
-            console.log(el);
-            el.addEventListener('focus',function(){
-                document.body.classList.add('fixfixed');
-                document.body.style.minHeight = screen.height-headerH-footerH+'px';
-            });
-            el.addEventListener('blur',function(){
-                document.body.classList.remove('fixfixed');
-                document.body.style.minHeight = 'auto';
-            });
-        });
-    };
 
     var hideSb = function () {
         window.StatusBar && window.StatusBar.hide();
@@ -540,14 +573,6 @@
         });
     };
 
-    var headerH = 50;
-    var footerH = 50;
-    var prepareHeaderAndFooter = function() {
-        document.body.style.paddingTop = headerH +'px';
-        document.body.style.paddingBottom = footerH+ 'px';
-        document.querySelector('header').style.height = headerH+'px';
-        document.querySelector('footer').style.height = footerH+'px';
-    };
 
     var initInputAutoClear = function () {
         Utils.forEachEl('[data-clearable="true"]', function (el) {
@@ -593,6 +618,143 @@
         });
     };
 
+    var getTextAreaRows = function(ta) {
+        var options = {
+            recalculateCharWidth: true,
+            charsMode: "random",
+            fontAttrs: ["font-family", "font-size", "text-decoration", "font-style", "font-weight"]
+        };
+
+        var masterCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        var counter;
+
+        ta = Utils.__resolveElement(ta);
+
+        var value = ta.value;
+        switch (options.charsMode) {
+            case "random":
+                // Build a random collection of characters
+                options.chars = "";
+                masterCharacters += ".,?!-+;:'\"";
+                for (counter = 1; counter <= 12; counter++) {
+                    options.chars += masterCharacters[(Math.floor(Math.random() * masterCharacters.length))];
+                }
+                break;
+            case "alpha":
+                options.chars = masterCharacters;
+                break;
+            case "alpha_extended":
+                options.chars = masterCharacters + ".,?!-+;:'\"";
+                break;
+            case "from_ta":
+                // Build a random collection of characters from the textarea
+                if (value.length < 15) {
+                    options.chars = masterCharacters;
+                } else {
+                    for (counter = 1; counter <= 15; counter++) {
+                        options.chars += value[(Math.floor(Math.random() * value.length))];
+                    }
+                }
+                break;
+            case "custom":
+                // Already defined in options.chars
+                break;
+        }
+
+        // Decode chars
+        //if (!options.chars.slice) {
+        options.chars = options.chars.split('');
+        //}
+
+        // Generate a span after the textarea with a random ID
+        var id = "";
+        for (counter = 1; counter <= 10; counter++) {
+            id += (Math.floor(Math.random() * 10) + 1);
+        }
+
+        var span = document.createElement('span');
+        span.id='spp';
+        window.span = span;
+        document.body.appendChild(span);
+        span.style.visibility = 'hidden';
+        span.style.display = 'inline-block';
+
+        // Apply the font properties of the textarea to the span class
+        options.fontAttrs.forEach(function(v){
+            span.style[v]=getComputedStyle(ta)[v];
+        });
+        // Get the number of lines
+        var lines = value.split("\n");
+        var linesLen = lines.length;
+
+        var averageWidth;
+
+        // Check if the textarea has a cached version of the average character width
+        if (options.recalculateCharWidth) {
+            // Get a pretty good estimation of the width of a character in the textarea. To get a better average, add more characters and symbols to this list
+            var chars = options.chars;
+
+            var charLen = chars.length;
+            var totalWidth = 0;
+
+            chars.forEach(function(v){
+                span.textContent = v;
+                totalWidth+=parseInt(getComputedStyle(span).width);
+            });
+
+            // Store average width on textarea
+            averageWidth = Math.ceil(totalWidth / charLen);
+        }
+
+        // We are done with the span, so kill it
+        span.remove();
+
+        // Determine missing width (from padding, margins, borders, etc); this is what we will add to each line width
+        var missingWidth = (ta.clientWidth - parseInt(getComputedStyle(ta).width)) * 2;
+
+        // Calculate the number of lines that occupy more than one line
+        var lineWidth;
+
+        var wrappingLines = 0;
+        var wrappingCount = 0;
+        var blankLines = 0;
+
+        lines.forEach(function(v){
+            // Calculate width of line
+            lineWidth = ((v.length + 1) * averageWidth) + missingWidth;
+            // Check if the line is wrapped
+            if (lineWidth >= ta.clientWidth) {
+                // Calculate number of times the line wraps
+                wrappingCount += Math.floor(lineWidth / ta.clientWidth);
+                wrappingLines++;
+            }
+
+            if (v && v.trim() === "") {
+                blankLines++;
+            }
+        });
+
+        var ret = {};
+        ret["actual"] = linesLen;
+        ret["wrapped"] = wrappingLines;
+        ret["wraps"] = wrappingCount;
+        ret["visual"] = linesLen + wrappingCount;
+        ret["blank"] = blankLines;
+
+        return ret;
+    };
+
+
+    var resolveDataOnClick = function() {
+        Utils.forEachEl('[data-onclick]', function (el) {
+            var code = el.getAttribute('data-onclick');
+            var fn = new Function(code);
+            Utils.onClick(el,function(){
+                fn.apply(el);
+            });
+        });
+    };
+
     var initAutocomplete = function() {
         Utils.forEachEl('[data-autocomplete-for]',function(el){
             if (el.processedAutoComplete) return;
@@ -600,12 +762,24 @@
             var input = Utils.byId(el.getAttribute('data-autocomplete-for'));
             input.setAttribute('autocomplete','off');
             var acContainer = document.querySelector('[data-autocomplete-for="'+input.id+'"].autocompleteList');
-            input.addEventListener('focus',function(e){
+            var calcPopupMaxHeight = function() {
                 var acTop = acContainer.getBoundingClientRect().top;
-                var height = window.innerHeight - acTop;
+                var footer = Utils.byId('footer');
+                var footerHeight = parseInt(footer && getComputedStyle(footer).height)||0;
+                var height = window.innerHeight - footerHeight - acTop;
                 height*=0.85;
                 acContainer.style.maxHeight = height + 'px';
+            };
+            input.addEventListener('focus',function(e){
+                calcPopupMaxHeight();
             });
+            window.addEventListener('resize',function(){
+                calcPopupMaxHeight();
+            });
+            window._onResizeCustomEv = function(){
+                console.log('_onResizeCustomEv');
+                calcPopupMaxHeight();
+            };
             var fnName = el.getAttribute('data-autocomplete-function');
             if (!fnName) throw 'not specified function with attr '+el.getAttribute('data-autocomplete-for')+' for autocomplete';
             if (!input) throw 'not specified input with attr '+el.getAttribute('data-autocomplete-for')+' for autocomplete';
@@ -625,12 +799,26 @@
                 console.log('input onValueChangedEvt');
                 invokeFnFromAttribute();
             };
-            //input.addEventListener('change',function(e){
-            //    console.log('cnahged',input.value);
-            //    invokeFnFromAttribute();
-            //});
         });
     };
+
+    var initCheckBoxes = function(){
+        Utils.forEachEl('.iSwitch',function(el){
+            if (el.initCheckBoxes) return;
+            el.initCheckBoxes = true;
+            var input = Utils.byId(el.dataset['for']);
+            if (input && input.checked) el.classList.add('switchOn');
+            Utils.onMouseDown(el,function(e){
+                el.x = e.clientX;
+                console.log(el.x);
+                el.classList.toggle('switchOn');
+                if (input) {
+                    input.checked = !input.checked;
+                }
+            });
+        })
+    };
+
 
     var initAutoSave = function() {
         Utils.forEachEl('[data-autosave]',function(input){
@@ -643,16 +831,23 @@
                     var obj = JSON.parse(valFromLs);
                     obj.name && (input.value = obj.name);
                     input.data = obj;
+                    if (input.onValueChangedEvt) input.onValueChangedEvt();
                 } catch(e){
                     localStorage.removeItem(id);
                 }
             }
-            input.addEventListener('change',function(){
+            var onChanged = function(){
                 if (!id) throw 'input id must be specified if data-autosave attribute present';
                 if (!input.data) input.data = {};
                 input.data.name=input.value;
                 localStorage.setItem(id,JSON.stringify(input.data));
+            };
+            input.addEventListener('change',function(){
+                onChanged();
             });
+            input.triggerChange = function(){
+                onChanged();
+            }
         });
     };
 
@@ -677,6 +872,23 @@
                 _showPage(page,options);
             }
         })
+    };
+
+    var observeVirtualKeyboard = function() {
+        document.addEventListener('focusin', function(e) {
+            setTimeout(function(){
+                window.Keyboard && window.Keyboard.shrinkView(true);
+                CommonController.recalculateMainHeight();
+                window._onResizeCustomEv && window._onResizeCustomEv();
+            },10);
+        });
+        document.addEventListener('focusout', function(e) {
+            setTimeout(function(){
+                window.Keyboard && window.Keyboard.shrinkView(false);
+                CommonController.recalculateMainHeight();
+                window._onResizeCustomEv && window._onResizeCustomEv();
+            },10);
+        });
     };
 
     var resolveIncludes = function(){
@@ -711,17 +923,19 @@
         initAutocomplete();
         initAutoSave();
         initAsyncImages();
+        resolveDataOnClick();
+        initCheckBoxes();
+        CommonController.recalculateMainHeight();
     };
 
     CommonController.init = function () {
         hideSb();
         initHashRouter();
+        observeVirtualKeyboard();
         return new Promise(function(resolve,reject){
             resolveIncludes().
                 then(function(){
                     CommonController.applyComponents();
-                    fixFixedPositionIos();
-                    prepareHeaderAndFooter();
                     navigator.splashscreen && navigator.splashscreen.hide();
                     resolve();
                 });
@@ -734,9 +948,11 @@
         var oldCtrl;
         if (pageControllerMap[lastShowedPageId]) {
             oldCtrl = pageControllerMap[lastShowedPageId];
+            oldCtrl.scrollY = document.querySelector('main').scrollTop;
             oldCtrl.onBeforePageClosed && oldCtrl.onBeforePageClosed();
         }
         var pageEl = document.getElementById(pageId);
+        if (!pageEl) throw 'no page with pageId '+pageId;
         Utils.forEachEl('.page', function (el) {
             if (el.id == pageId) el.classList.add('active');
             else el.classList.remove('active');
@@ -748,9 +964,25 @@
         if (pageControllerMap[pageId]) {
             var ctrl = pageControllerMap[pageId];
             if (!ctrl.onPageShowed) throw 'specify onPageShowed function in controller registered for page '+pageId;
+            document.querySelector('main').scrollTop = ctrl.scrollY||0;
             ctrl.onPageShowed(options);
         }
+        CommonController.recalculateMainHeight();
         lastShowedPageId = pageId;
+    };
+
+    Utils.waitForImagesLoads = function(nodeArr){
+        return new Promise(function(resolve,reject){
+            var q = new Utils.Queue();
+            Array.prototype.forEach.call(nodeArr,function(img){
+                if (img.complete) return;
+                q.addTask();
+                img.onload = q.resolveTask;
+            });
+
+            if (!q.size()) resolve();
+            q.onResolved = resolve;
+        });
     };
 
     CommonController.showPage = function(pageId,options) {
@@ -773,6 +1005,18 @@
     var pageControllerMap = {};
     CommonController.registerControllerForPage = function(controller,pageId){
         pageControllerMap[pageId] = controller;
+    };
+
+    CommonController.recalculateMainHeight = function() {
+        var h = window.innerHeight -
+            Utils.byId('header').clientHeight -
+            Utils.byId('subHeader').clientHeight -
+            Utils.byId('subFooter').clientHeight -
+            Utils.byId('footer').clientHeight;
+        document.querySelector('main').style.height = h +'px';
+        setTimeout(function(){
+            window.scrollTo(0,0);
+        },10);
     };
 
 

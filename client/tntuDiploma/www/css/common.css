@@ -1,9 +1,17 @@
 /*-----common------*/
 
-* {
+html,body {
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    margin:0;
+    padding:0;
+    border:none;
 }
 
+header,footer,main {
+    display: block;
+}
 
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
@@ -12,15 +20,8 @@ body {
     background:#fff fixed;
     font-family: Helvetica, Arial, sans-serif;
     height:100%;
-    margin:0;
-    padding:0;
     width:100%;
 }
-
-body {
-
-}
-
 
 h1 {
     font-weight:normal;
@@ -29,6 +30,7 @@ h1 {
     padding:0;
     text-align:center;
 }
+
 
 /*----general rules-------*/
 
@@ -60,8 +62,16 @@ h1 {
     right: 0;
 }
 
+.bottom0 {
+    bottom: 0;
+}
+
 .floatRight {
     float: right;
+}
+
+.floatLeft {
+    float: left;
 }
 
 .vAligned {
@@ -74,6 +84,10 @@ h1 {
 
 .rightAligned {
     text-align: right;
+}
+
+.leftAligned {
+    text-align: left;
 }
 
 .fontSize0 {
@@ -126,6 +140,16 @@ h1 {
 
 .centerHorizontal {
     margin: 0 auto;
+}
+
+.centerVertical {
+    top: 55%;
+    margin-top: -55%;
+    position: relative;
+}
+
+.vBottom {
+    vertical-align: bottom;
 }
 
 .table {display: table;}
@@ -191,6 +215,18 @@ h1 {
     color:red;
 }
 
+.black {
+    color:black;
+}
+
+.orange {
+    color: #f57c00;
+}
+
+.justify {
+    text-align: justify;
+}
+
 .frmWithMarginTop {
     margin-top: 130px;
 }
@@ -205,6 +241,10 @@ h1 {
 
 .midPlus {
     font-size: 14px;
+}
+
+.layoutFixed {
+    table-layout: fixed;
 }
 
 .small {

@@ -1,4 +1,5 @@
 /*---common layout-----*/
+
 html,
 body,div {
     margin: 0;
@@ -8,36 +9,34 @@ body,div {
 
 header {
     background-color: #fafafa;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: relative;
     z-index: 10;
 }
 
 body {
-    overflow: auto;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
     position: relative;
     z-index:1;
     line-height: 12px;
 }
 
+main {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: relative;
     z-index:10;
     background-color: #fafafa;
 }
 
-.fixfixed .iosFixPos {
-    position: absolute !important;
-}
 
 #subHeader,#subFooter {
     padding: 0 0;
-    position:fixed;
+    position:relative;
     z-index: 8;
     background-color: white;
 }
@@ -45,19 +44,45 @@ footer {
 #subHeader {
     left:0;
     right:0;
-    height: 35px;
 }
 
 #subFooter {
     left: 0;
     right: 0;
     bottom: 0;
-    padding-bottom: 50px;
+}
+
+select {
+    border: none;
+    border-bottom: 1px solid grey;
+    background-color: #fcfcfc;
+    padding: 8px 10px;
+    color:#888;
+    outline:none;
+    display: inline-block;
+    -webkit-appearance:none;
+    appearance:none;
+    border-radius: 0;
+    width: 100%;
+}
+
+.selectHandle {
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom: 10px solid grey;
+    border-left: 10px solid transparent;
 }
 
 .inputWrapper {
     border: none;
     border-bottom: 1px solid grey;
+}
+
+input.force-redraw {
+    text-shadow: none;
 }
 
 @media screen and (min-width: 740px) {
@@ -100,6 +125,7 @@ footer {
     margin: 0 auto;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     font-size: 15px;
 }
 
@@ -119,7 +145,6 @@ footer {
 .commonList {
     position: relative;
     z-index: 5;
-    margin-top:43px;
 }
 
 .commonLine {
@@ -148,16 +173,17 @@ footer {
 }
 
 .withMaxWidth {
-    max-width: 500px;
+    max-width: 450px;
 }
 
 .frmTable {
     border-collapse: collapse;
 }
 
-.frmTable .tableRow {
-    padding: 5px;
+.frmTable .tableCell {
+    padding-top: 10px;
 }
+
 
 .underlined {
     border-bottom: 1px solid #bdbdbd;
@@ -190,18 +216,19 @@ footer {
 
 .dialogContent {
     width: 80%;
+    max-width: 300px;
     margin: 0 auto;
     background-color: white;
     padding: 10px;
     border-radius: 5px;
 }
 
-.dialogContent button {
+.dialogContent button,.dialogButton {
     background-color: white;
     color: #e65100;
 }
 
-.dialogContent button:active {
+.dialogContent button:active,.dialogButton:active {
     background-color: rgba(0,0,0,0.1);
 }
 
@@ -209,21 +236,50 @@ footer {
     margin-right: 5px;
 }
 
+.iconText {
+    color: #484848;
+}
+
+.iconWrapper:active .iconText {
+    color: #3a3a3a;
+}
+
 .iconWrapper .iconCommon {
     display: inline-block;
 }
 
-.iconWrapper .iconActive {
+.iconWrapper .iconSelected {
     display: none;
+}
+
+.selected .iconSelected {
+    display: inline-block;
+}
+
+.selected .iconCommon {
+    display: none;
+}
+
+.selected .iconText {
+    color:#f47b2a;
 }
 
 .iconWrapper:active .iconCommon{
     display: none;
 }
 
+.iconWrapper .iconActive {
+    display: none;
+}
+
 .iconWrapper:active .iconActive{
     display: inline-block;
 }
+
+.selected:active .iconActive{
+    display: none;
+}
+
 
 /*-----buttons-------*/
 
@@ -290,16 +346,50 @@ a.asButton.asGreyButton:visited {
     background-color: #fafafa;
 }
 
-button, input[type=text],input[type=password],input[type=email] {
+button, input[type=text],input[type=password],input[type=email],input[type=number],textarea {
     display: inline-block;
     margin: 0 auto;
+    text-overflow: ellipsis;
 }
 
-input[type=text],input[type=password],input[type=email] {
+textarea {
+    resize: none;
+}
+
+textarea:disabled {
+    color:black;
+}
+
+textarea::-webkit-scrollbar {
+    width: 1px;
+    height: 15px;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+}
+textarea::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #C3C3C3;
+    border: 1px solid #eee;
+}
+
+textarea::-webkit-scrollbar-track {
+    width: 1px;
+}
+
+textarea.fullScreen {
+    margin: 0;
+    padding: 0;
+    border: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+input[type=text],input[type=password],input[type=email],input[type=number],textarea {
     background: none;
     border: none;
     outline: none;
-    width: 100%;
+    width: 95%;
     margin: 8px 0;
 }
 
@@ -313,8 +403,8 @@ input[type=text],input[type=password],input[type=email] {
 
 .validationErrorWrapper {
     position: absolute;
-    top: 15px;
-    right: 10px;
+    bottom: 18px;
+    right: -20px;
 }
 
 .validationErrorContainer {
@@ -325,4 +415,58 @@ input[type=text],input[type=password],input[type=email] {
     top: 30px;
     min-width: 200px;
     text-align: right;
+}
+
+.underlined.error input::-webkit-input-placeholder {
+    color:#c0392b;
+}
+
+.underlined.error input {
+    color:red;
+}
+
+.shadowedBottom {
+    height: 100px;
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.64) 0%, #FFFFFF 100%);
+}
+
+.boxShadowDown {
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+}
+
+.boxShadowUp {
+    box-shadow: 0 -2px 3px rgba(0,0,0,0.2);
+}
+
+.line-in-mid {
+    position: relative;
+}
+
+.line-in-mid:after {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 5;
+    height: 1px;
+    background: #c3c6cc;
+    content: "";
+    width: 100%;
+    display: block;
+}
+
+.line-in-mid-content {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+    background-color: white;
+    padding: 5px 10px;
+}
+
+.hideCarret {
+    color : transparent;
+    text-shadow : 0 0 0 #000;
+}
+
+.hideCarret::-webkit-input-placeholder {
+    color:transparent;
 }

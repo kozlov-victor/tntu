@@ -7,24 +7,22 @@ window.onerror = function(message, url, lineNumber) {
 
 (function(){
 
-    var INITIAL_PAGE = 'main';
+    var INITIAL_PAGE = 'index';
 
     Utils.onReady(function(){
         Utils.
             require([
-                'js/app/misc/api.js',
                 'js/app/misc/i18n.js',
                 'js/app/misc/validator.js',
                 'js/app/controllers/loginPageController.js',
-                'js/app/controllers/registrationController.js',
+                'js/app/controllers/indexPageController.js'
             ]).
             then(function(){
-                Api.makeBaseRequest();
                 i18n.setLocale('ua');
                 i18n.applyLocale();
+                CommonController.init();
 
                 LoginPageController.init();
-                RegistrationController.init();
 
                 CommonController.showPage(INITIAL_PAGE);
             });
